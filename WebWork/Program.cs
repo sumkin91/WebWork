@@ -1,12 +1,12 @@
-var builder = WebApplication.CreateBuilder(args);
+п»їvar builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();//настройка сервисов путем добавления контроллеров и представлений
+builder.Services.AddControllersWithViews();//РЅР°СЃС‚СЂРѕР№РєР° СЃРµСЂРІРёСЃРѕРІ РїСѓС‚РµРј РґРѕР±Р°РІР»РµРЅРёСЏ РєРѕРЅС‚СЂРѕР»Р»РµСЂРѕРІ Рё РїСЂРµРґСЃС‚Р°РІР»РµРЅРёР№
 
 var app = builder.Build();
 
 app.MapGet("/greatings", () => app.Configuration["ServerGreatings"]);
 
-//app.MapDefaultControllerRoute();//настройка маршрутизации
+//app.MapDefaultControllerRoute();//РЅР°СЃС‚СЂРѕР№РєР° РјР°СЂС€СЂСѓС‚РёР·Р°С†РёРё
 
 app.MapControllerRoute(
     name: "default",
