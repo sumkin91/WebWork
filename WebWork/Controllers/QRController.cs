@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QRCoder;
-namespace WebWork.Controllers;
+
+namespace WebStore.Controllers;
 
 public class QRController : Controller
 {
@@ -9,7 +10,9 @@ public class QRController : Controller
         var generator = new QRCodeGenerator();
         var data = generator.CreateQrCode(str, QRCodeGenerator.ECCLevel.Q);
         var code = new PngByteQRCode(data);
+
         var image_bytes = code.GetGraphic(20);
+
         return File(image_bytes, "image/png");
     }
 }

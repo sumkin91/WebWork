@@ -1,37 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebWork.Models;
 
-namespace WebWork.Controllers;
+namespace WebStore.Controllers;
 
 public class HomeController : Controller
 {
+    public IActionResult Index() => View();
 
-    private static readonly List<Employee> __Employees = new()
+    public IActionResult Greetings(string? id)
     {
-        new Employee { Id = 1, LastName = "Иванов", FirstName = "Иван", Patronymic = "Иванович", Age = 23 },
-        new Employee { Id = 2, LastName = "Петров", FirstName = "Пётр", Patronymic = "Петрович", Age = 27 },
-        new Employee { Id = 3, LastName = "Сидоров", FirstName = "Сидор", Patronymic = "Сидорович", Age = 18 },
-    };
-    public IActionResult Index()
-    {
-        return View();
+        return Content($"Hello from first controller - {id}");
     }
 
-    public IActionResult Greatings(string? id)
-    {
-        return Content($"Hello from controller - greatings, id: {id}");
-    }
+    public IActionResult Contacts() => View();
 
-    public IActionResult Employees()
-    {
-        return View(__Employees);
-    }
-
-    public IActionResult EmployeDetails(int id)
-    {
-        var employee = __Employees.FirstOrDefault(x => x.Id == id);
-        if(employee == null) return NotFound();
-        return View(employee);
-    }
+    public IActionResult Error404() => View();
 }
-
