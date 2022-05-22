@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebWork.Models;
 
-namespace WebStore.Controllers;
+namespace WebWork.Controllers;
 
 public class HomeController : Controller
 {

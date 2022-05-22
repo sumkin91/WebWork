@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QRCoder;
 
-namespace WebStore.Controllers;
+namespace WebWork.Controllers;
 
 public class QRController : Controller
 {

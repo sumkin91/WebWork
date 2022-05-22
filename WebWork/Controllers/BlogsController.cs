@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace WebStore.Controllers;
+namespace WebWork.Controllers;
 
 public class BlogsController : Controller
 {
