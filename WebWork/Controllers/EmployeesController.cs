@@ -1,29 +1,105 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-
+using WebWork.Services.Interfaces;
+using WebWork.ViewModels;
 using WebWork.Models;
 
-namespace WebStore.Controllers;
+namespace WebWork.Controllers;
 
+//[Route("Staff/{action=Index}/{id?}")] // переопределение адреса контроллера
 public class EmployeesController : Controller
 {
-    private static readonly List<Employee> __Employees = new()
-    {
-        new Employee { Id = 1, LastName = "Иванов", FirstName = "Иван", Patronymic = "Иванович", Age = 23 },
-        new Employee { Id = 2, LastName = "Петров", FirstName = "Пётр", Patronymic = "Петрович", Age = 27 },
-        new Employee { Id = 3, LastName = "Сидоров", FirstName = "Сидор", Patronymic = "Сидорович", Age = 18 },
-    };
+    private IEmployeesData _Employees;
 
+    public EmployeesController(IEmployeesData Employees) { _Employees = Employees; }
     public IActionResult Index()
     {
-        return View(__Employees);
+        var employees = _Employees.GetAll();
+        return View(employees);
     }
 
+    //[Route("Staff/Info/{id?}")]// переопределение адреса действия, указывать контроллер необязательно (контроллер по умолчанию)
+    //[Route("[controller]/Info/{id?}")] // с указанием контроллера
     public IActionResult Details(int Id)
     {
-        var employee = __Employees.FirstOrDefault(x => x.Id == Id);
+        var employee = _Employees.GetById(Id);
         if (employee is null)
             return NotFound();
 
         return View(employee);
+    }
+
+    public IActionResult Create() => View(nameof(Edit), new EmployeesViewModel());
+
+    public IActionResult Edit(int? id)
+    {
+        if(id == null) return View(new EmployeesViewModel());// если id отсутствует
+
+        var employee = _Employees.GetById((int)id);
+        if (employee is null)
+            return NotFound();
+
+        var view_model = new EmployeesViewModel
+        {
+            Id = employee.Id,
+            FirstName = employee.FirstName,
+            LastName = employee.LastName,
+            Patronymic = employee.Patronymic,
+            Age = employee.Age,
+        };
+        
+        return View(view_model);
+    }
+
+    [HttpPost]
+    public IActionResult Edit(EmployeesViewModel Model)
+    {
+        var employee = new Employee
+        {
+            Id = Model.Id,
+            FirstName = Model.FirstName,
+            LastName = Model.LastName,
+            Patronymic = Model.Patronymic,
+            Age = Model.Age,
+        };
+        if (Model.Id == 0)
+        {
+            var new_employee_id = _Employees.Add(employee);
+            return RedirectToAction(nameof(Details), new {Id = new_employee_id});
+        }
+        
+        _Employees.Edit(employee);//ввод изменения в сервис
+
+        return RedirectToAction(nameof(Index)); 
+    }
+
+    //опреации удаления не реализуются путем GET запроса
+    public IActionResult Delete(int id)
+    {
+        //так делать нельзя, могут взломать путем отправки индексов
+        //_Employees.Delete(id);
+        //return RedirectToAction(nameof(Index));
+
+        var employee = _Employees.GetById(id);
+        if (employee is null)
+            return NotFound();
+
+        var view_model = new EmployeesViewModel
+        {
+            Id = employee.Id,
+            FirstName = employee.FirstName,
+            LastName = employee.LastName,
+            Patronymic = employee.Patronymic,
+            Age = employee.Age,
+        };
+
+        return View(view_model);
+    }
+
+    [HttpPost]
+    public IActionResult DeleteConfirmed(int id)
+    {
+        if (!_Employees.Delete(id)) return NotFound();
+        
+        return RedirectToAction(nameof(Index));
     }
 }
