@@ -18,11 +18,14 @@ services.AddScoped<IProductData, InMemoryProductData>();
 //builder.Services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
 
 
+
 services.AddControllersWithViews(opt => //настройка сервисов путем добавления контроллеров и представлений 
 {
     opt.Conventions.Add(new TestConvertion()); //реализация добавления и/или удаления соглашений
 }
 );
+
+services.AddAutoMapper(typeof(Program));//добавление автомаппера
 
 var app = builder.Build();
 

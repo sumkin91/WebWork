@@ -2,6 +2,8 @@
 using WebWork.Services.Interfaces;
 using WebWork.Domain;
 using WebWork.ViewModels;
+using WebWork.Infrastructure.Mapping;
+using AutoMapper;
 
 namespace WebWork.Controllers;
 
@@ -9,31 +11,24 @@ public class CatalogController : Controller
 {
     private readonly IProductData _ProductData;
 
-    public CatalogController(IProductData ProductData) => _ProductData = ProductData;
+    private readonly IMapper _Mapper;
 
-    public IActionResult Index(int? SectionId, int? BrandId ) // shop.html
+    public CatalogController(IProductData ProductData, IMapper Mapper)
     {
-        var filter = new ProductFilter
-        {
-            SectionId = SectionId,
-            BrandId = BrandId
-        };
+        _ProductData = ProductData;
+        _Mapper = Mapper;
+    }
 
+    public IActionResult Index([Bind("BrandId","SectionId")]ProductFilter filter ) // shop.html
+    {
         var products = _ProductData.GetProducts(filter);
 
         return View(new CatalogViewModel
         {
-            BrandId = BrandId,
-            SectionId = SectionId,
-            Products = products
-            .OrderBy(p => p.Order)
-            .Select(p => new ProductViewModel
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Price = p.Price,
-                ImageUrl = p.ImageUrl,
-            })
-        });
+            BrandId = filter.BrandId,
+            SectionId = filter.SectionId,
+            Products = products.OrderBy(p => p.Order).Select(p => _Mapper.Map<ProductViewModel>(p)),
+            //Products = products.OrderBy(p => p.Order).ToView()!, //mapper ручной: Infrastructuries/Mapping
+        }); ; 
     }
 }
