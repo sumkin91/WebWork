@@ -2,6 +2,8 @@
 using WebWork.Models;
 using WebWork.Services.Interfaces;
 using WebWork.ViewModels;
+using WebWork.Infrastructure.Mapping;
+using WebWork.Domain.Entities;
 
 namespace WebWork.Controllers;
 
@@ -9,16 +11,8 @@ public class HomeController : Controller
 {
     public IActionResult Index([FromServices] IProductData ProductData)
     {
-        var products = ProductData.GetProducts()
-           .OrderBy(p => p.Order)
-           .Take(6)
-           .Select(p => new ProductViewModel
-           {
-               Id = p.Id,
-               Name = p.Name,
-               Price = p.Price,
-               ImageUrl = p.ImageUrl,
-           });
+        var products = ProductData.GetProducts().OrderBy(p => p.Order).Take(6).ToView(); //mapper
+
 
         ViewBag.Products = products;
 

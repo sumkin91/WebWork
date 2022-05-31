@@ -1,20 +1,32 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebWork.Services.Interfaces;
 using WebWork.ViewModels;
-using WebWork.Models;
+using WebWork.Infrastructure.Mapping;// ручной маппер
+using AutoMapper;
+//using WebWork.Models.InMemory;
+using WebWork.Domain.Entities;
 
 namespace WebWork.Controllers;
 
 //[Route("Staff/{action=Index}/{id?}")] // переопределение адреса контроллера
 public class EmployeesController : Controller
 {
-    private IEmployeesData _Employees;
+    private readonly IEmployeesData _Employees;
+    private readonly IMapper _Mapper;
 
-    public EmployeesController(IEmployeesData Employees) { _Employees = Employees; }
+    public EmployeesController(IEmployeesData Employees, IMapper Mapper)
+    {
+        _Employees = Employees;
+        _Mapper = Mapper;
+    }
+
     public IActionResult Index()
     {
         var employees = _Employees.GetAll();
-        return View(employees);
+
+        var view_models = employees.Select(e => _Mapper.Map<EmployeesViewModel>(e));
+
+        return View(view_models);
     }
 
     //[Route("Staff/Info/{id?}")]// переопределение адреса действия, указывать контроллер необязательно (контроллер по умолчанию)
@@ -25,28 +37,32 @@ public class EmployeesController : Controller
         if (employee is null)
             return NotFound();
 
-        return View(employee);
+        return View(_Mapper.Map<EmployeesViewModel>(employee));
     }
 
     public IActionResult Create() => View(nameof(Edit), new EmployeesViewModel());
 
     public IActionResult Edit(int? id)
     {
-        if(id == null) return View(new EmployeesViewModel());// если id отсутствует
+        if (id == null) return View(new EmployeesViewModel());// если id отсутствует
 
         var employee = _Employees.GetById((int)id);
         if (employee is null)
             return NotFound();
 
-        var view_model = new EmployeesViewModel
-        {
-            Id = employee.Id,
-            FirstName = employee.FirstName,
-            LastName = employee.LastName,
-            Patronymic = employee.Patronymic,
-            Age = employee.Age,
-        };
-        
+        var view_model = _Mapper.Map<EmployeesViewModel>(employee);//automapper
+
+        //var view_model = employee.ToView();//ручной Mapping
+
+        //var view_model = new EmployeesViewModel
+        //{
+        //    Id = employee.Id,
+        //    FirstName = employee.FirstName,
+        //    LastName = employee.LastName,
+        //    Patronymic = employee.Patronymic,
+        //    Age = employee.Age,
+        //};
+
         return View(view_model);
     }
 
@@ -58,27 +74,31 @@ public class EmployeesController : Controller
             ModelState.AddModelError("", "QWE - плохой выбор!");
 
         if (Model.FirstName == "Asd") ModelState.AddModelError("FirstName", "Asd - плохо!");
-        
+
         //валидация модели c отправкой всех ошибок модели
-        if(!ModelState.IsValid) return View(Model);
-        
-        var employee = new Employee
-        {
-            Id = Model.Id,
-            FirstName = Model.FirstName,
-            LastName = Model.LastName,
-            Patronymic = Model.Patronymic,
-            Age = Model.Age,
-        };
+        if (!ModelState.IsValid) return View(Model);
+
+        var employee = _Mapper.Map<Employee>(Model);//automapping
+
+        //var employee = Model.FromView();//ручной mapping
+
+        //var employee = new Employee
+        //{
+        //    Id = Model.Id,
+        //    FirstName = Model.FirstName,
+        //    LastName = Model.LastName,
+        //    Patronymic = Model.Patronymic,
+        //    Age = Model.Age,
+        //};
         if (Model.Id == 0)
         {
             var new_employee_id = _Employees.Add(employee);
-            return RedirectToAction(nameof(Details), new {Id = new_employee_id});
+            return RedirectToAction(nameof(Details), new { Id = new_employee_id });
         }
-        
+
         _Employees.Edit(employee);//ввод изменения в сервис
 
-        return RedirectToAction(nameof(Index)); 
+        return RedirectToAction(nameof(Index));
     }
 
     //опреации удаления не реализуются путем GET запроса
@@ -108,7 +128,7 @@ public class EmployeesController : Controller
     public IActionResult DeleteConfirmed(int id)
     {
         if (!_Employees.Delete(id)) return NotFound();
-        
+
         return RedirectToAction(nameof(Index));
     }
 }

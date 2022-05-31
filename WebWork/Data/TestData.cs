@@ -1,5 +1,4 @@
-﻿using WebWork.Models;
-using WebWork.Domain.Entities;
+﻿using WebWork.Domain.Entities;
 
 namespace WebWork.Data;
 

@@ -5,7 +5,9 @@ VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebWork", "WebWork\WebWork.csproj", "{A53004D5-6779-430E-BCEB-D92412410B62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebWork.Domain", "WebWork.Domain\WebWork.Domain.csproj", "{A1620B55-CDEF-43F3-AECD-6842B0D4FA8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebWork.Domain", "WebWork.Domain\WebWork.Domain.csproj", "{A1620B55-CDEF-43F3-AECD-6842B0D4FA8E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebWork.DAL", "WebWork.DAL\WebWork.DAL.csproj", "{6C703ADD-E4F2-4C0C-B8F3-A6585AA435BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{A1620B55-CDEF-43F3-AECD-6842B0D4FA8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1620B55-CDEF-43F3-AECD-6842B0D4FA8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1620B55-CDEF-43F3-AECD-6842B0D4FA8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C703ADD-E4F2-4C0C-B8F3-A6585AA435BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C703ADD-E4F2-4C0C-B8F3-A6585AA435BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C703ADD-E4F2-4C0C-B8F3-A6585AA435BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C703ADD-E4F2-4C0C-B8F3-A6585AA435BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

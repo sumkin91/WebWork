@@ -1,15 +1,16 @@
-﻿using WebWork.Models;
+﻿//using WebWork.Models.InMemory;
+using WebWork.Domain.Entities;
 
 namespace WebWork.Services.Interfaces;
 
 public interface IEmployeesData
 {
-    IEnumerable<Employee> GetAll();
-    Employee? GetById(int id);   
+    public IEnumerable<Employee> GetAll();
+    public Employee? GetById(int id);   
 
-    int Add(Employee employee); 
+    public int Add(Employee employee); 
 
-    bool Edit(Employee employee);
+    public bool Edit(Employee employee);
 
-    bool Delete(int id);
+    public bool Delete(int id);
 }
