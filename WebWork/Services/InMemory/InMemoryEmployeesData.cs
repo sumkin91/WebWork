@@ -2,7 +2,7 @@
 using WebWork.Data;
 using WebWork.Services.Interfaces;
 
-namespace WebWork.Services;
+namespace WebWork.Services.InMemory;
 
 public class InMemoryEmployeesData : IEmployeesData
 {

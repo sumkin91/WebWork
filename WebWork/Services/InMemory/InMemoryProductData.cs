@@ -3,9 +3,9 @@ using WebWork.Data;
 using WebWork.Domain.Entities;
 using WebWork.Domain;
 
-namespace WebWork.Services
+namespace WebWork.Services.InMemory
 {
-    public class InMemoryProductData: IProductData
+    public class InMemoryProductData : IProductData
     {
         public IEnumerable<Section> GetSections() => TestData.Sections;
 
@@ -18,7 +18,7 @@ namespace WebWork.Services
             //if(Filter != null && Filter.SectionId != null)
             //    products = products.Where(x => x.SectionId == Filter.SectionId);
 
-            if(Filter is { SectionId: { } section_id })
+            if (Filter is { SectionId: { } section_id })
                 query = query.Where(q => q.SectionId == section_id);
 
             if (Filter is { BrandId: { } brand_id })
