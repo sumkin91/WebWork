@@ -13,11 +13,12 @@ var services = builder.Services;
 
 //регистрация сервиса
 //универсальный способ добавления в контейнер сервисов сервисы (как синглтон, но может меняться)
-services.AddScoped<IEmployeesData, InMemoryEmployeesData>(); // добавление сервиса в виде <интерфейс, реализация> тестовые данные
+//services.AddScoped<IEmployeesData, InMemoryEmployeeData>(); // добавление сервиса в виде <интерфейс, реализация> тестовые данные
 
 //services.AddScoped<IProductData, InMemoryProductData>();//тестовые данные
 
 services.AddScoped<IProductData, SqlProductData>();
+services.AddScoped<IEmployeesData, SqlEmployeeData>();
 
 services.AddDbContext<WebWorkDB>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));//добавление контекста БД, указывается строка подключения в аргументе (см. appsettings.json)
 

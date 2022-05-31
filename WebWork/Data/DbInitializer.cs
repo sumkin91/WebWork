@@ -44,16 +44,43 @@ public class DbInitializer
         _Logger.LogInformation("Применение миграций БД выполнено!");
 
 
-        if (AddTestData) await InitializeProductsAsync(Cancel);
+        if (AddTestData)
+        {
+            await InitializeEmployeesAsync(Cancel);
+            await InitializeProductsAsync(Cancel);
+        }
 
         _Logger.LogInformation("Инициализация БД выполнена!");
 
 
     }
 
+    private async Task InitializeEmployeesAsync(CancellationToken Cancel)
+    {
+        _Logger.LogInformation("Инициализация БД тестовыми данными Работников...");
+
+        if (await _db.Employees.AnyAsync(Cancel).ConfigureAwait(false))
+        {
+            _Logger.LogInformation("Инициализация БД тестовыми данными не требуется");
+            return;
+        }
+
+        await using var transaction = await _db.Database.BeginTransactionAsync(Cancel);
+
+        _Logger.LogInformation("Добавление в БД секций...");
+        await _db.Employees.AddRangeAsync(TestData.Employees, Cancel);
+
+        await _db.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT [dbo].[Employees] ON", Cancel);
+        await _db.SaveChangesAsync(Cancel);//сохранение изменений
+        await _db.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT [dbo].[Employees] OFF", Cancel);
+        _Logger.LogInformation("Добавление в БД секций выполнено успешно!");
+
+        await transaction.CommitAsync(Cancel);
+    }
+
     private async Task InitializeProductsAsync(CancellationToken Cancel)
     {
-        _Logger.LogInformation("Инициализация БД тестовыми данными...");
+        _Logger.LogInformation("Инициализация БД тестовыми данными Продуктов...");
 
         if (await _db.Products.AnyAsync(Cancel).ConfigureAwait(false))//если что-то есть в БД
         {
@@ -64,7 +91,7 @@ public class DbInitializer
         await using var transaction = await _db.Database.BeginTransactionAsync(Cancel); //начало транзакции, если до коммита транзакции не отработают, то данные внесены в БД не будут
 
         _Logger.LogInformation("Добавление в БД секций...");
-        await _db.Sections.AddRangeAsync(TestData.Sections, Cancel);// добавление в БД данные скций
+        await _db.Sections.AddRangeAsync(TestData.Sections, Cancel);// добавление в БД данные секций
 
         await _db.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT [dbo].[Sections] ON", Cancel);// сырой sql - переключение таблицы в спец режим для работы с ключами
         await _db.SaveChangesAsync(Cancel);//сохранение изменений

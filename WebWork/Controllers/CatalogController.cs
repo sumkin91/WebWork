@@ -2,7 +2,7 @@
 using WebWork.Services.Interfaces;
 using WebWork.Domain;
 using WebWork.ViewModels;
-using WebWork.Infrastructure.Mapping;
+//using WebWork.Infrastructure.Mapping; //ручной маппер
 using AutoMapper;
 
 namespace WebWork.Controllers;

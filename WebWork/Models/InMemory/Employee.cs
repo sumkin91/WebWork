@@ -1,4 +1,4 @@
-﻿namespace WebWork.Models;
+﻿namespace WebWork.Models.InMemory;
 
 public class Employee
 {

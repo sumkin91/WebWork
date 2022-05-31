@@ -13,6 +13,8 @@ public class WebWorkDB : DbContext     //класс контекста базы 
 
     public DbSet<Section> Sections { get; set; } = null!;
 
+    public DbSet<Employee> Employees { get; set; } = null!;
+
     public WebWorkDB(DbContextOptions<WebWorkDB> options) : base(options) // конструктор передает базовому классу объект options (в шаблоне тип контекста)
     {
 

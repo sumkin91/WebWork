@@ -4,8 +4,7 @@ namespace WebWork.Services.Interfaces;
 
 public interface IProductData
 {
-    IEnumerable<Section> GetSections();
-    IEnumerable<Brand> GetBrands();
-
-    IEnumerable<Product> GetProducts(ProductFilter? Filter = null);
+    public IEnumerable<Section> GetSections();
+    public IEnumerable<Brand> GetBrands();
+    public IEnumerable<Product> GetProducts(ProductFilter? Filter = null);
 }

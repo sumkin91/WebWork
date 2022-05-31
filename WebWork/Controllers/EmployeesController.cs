@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebWork.Services.Interfaces;
 using WebWork.ViewModels;
-using WebWork.Models;
-using WebWork.Infrastructure.Mapping;
+using WebWork.Infrastructure.Mapping;// ручной маппер
 using AutoMapper;
+//using WebWork.Models.InMemory;
+using WebWork.Domain.Entities;
 
 namespace WebWork.Controllers;
 
@@ -22,7 +23,10 @@ public class EmployeesController : Controller
     public IActionResult Index()
     {
         var employees = _Employees.GetAll();
-        return View(employees);
+
+        var view_models = employees.Select(e => _Mapper.Map<EmployeesViewModel>(e));
+
+        return View(view_models);
     }
 
     //[Route("Staff/Info/{id?}")]// переопределение адреса действия, указывать контроллер необязательно (контроллер по умолчанию)
@@ -33,7 +37,7 @@ public class EmployeesController : Controller
         if (employee is null)
             return NotFound();
 
-        return View(employee);
+        return View(_Mapper.Map<EmployeesViewModel>(employee));
     }
 
     public IActionResult Create() => View(nameof(Edit), new EmployeesViewModel());
