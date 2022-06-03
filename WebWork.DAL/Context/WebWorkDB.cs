@@ -2,10 +2,13 @@
 //entityfremwork tools (инструмент командной строки, для работы с БД)
 using Microsoft.EntityFrameworkCore;
 using WebWork.Domain.Entities;
+using WebWork.Domain.Entities.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
 
 namespace WebWork.DAL.Context;
-
-public class WebWorkDB : DbContext     //класс контекста базы данных
+//обычно контексты данных разделяют (продукты и пользователи)
+public class WebWorkDB : IdentityDbContext<User, Role, string>//класс контекста базы данных (DbContext), для совместного использования с пользователями используется шаблонный класс (последний параметр ключ)
 {
     public DbSet<Product> Products { get; set; } = null!; //должно быть достаточно для создание остальных таблиц из-за указанных взаимосвязей с другими сущностями
 

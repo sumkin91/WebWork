@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebWork.ViewModels;
 
-public class EmployeesViewModel : IValidatableObject
+public class EmployeeViewModel : IValidatableObject
 {
     [HiddenInput(DisplayValue = false)]
     [Display(Name = "Идентификатор")]

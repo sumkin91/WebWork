@@ -11,20 +11,30 @@ namespace WebWork.Controllers;
 //[Route("Staff/{action=Index}/{id?}")] // переопределение адреса контроллера
 public class EmployeesController : Controller
 {
-    private readonly IEmployeesData _Employees;
+    private readonly IEmployeeData _Employees;
     private readonly IMapper _Mapper;
 
-    public EmployeesController(IEmployeesData Employees, IMapper Mapper)
+    public EmployeesController(IEmployeeData Employees, IMapper Mapper)
     {
         _Employees = Employees;
         _Mapper = Mapper;
     }
 
-    public IActionResult Index()
+    public IActionResult Index(int? Page, int PageSize = 15)
     {
-        var employees = _Employees.GetAll();
+        IEnumerable<Employee> employee; 
 
-        var view_models = employees.Select(e => _Mapper.Map<EmployeesViewModel>(e));
+        if(Page is { } page && PageSize > 0)
+        {
+            employee = _Employees.Get(page * PageSize, PageSize);
+        }
+        else employee = _Employees.GetAll();
+
+        var view_models = employee.Select(e => _Mapper.Map<EmployeeViewModel>(e));
+
+        ViewBag.PagesCount = (PageSize > 0)
+            ? (int?)Math.Ceiling(_Employees.GetCount() / (double)PageSize)
+            : null!;
 
         return View(view_models);
     }
@@ -37,20 +47,22 @@ public class EmployeesController : Controller
         if (employee is null)
             return NotFound();
 
-        return View(_Mapper.Map<EmployeesViewModel>(employee));
+        return View(_Mapper.Map<EmployeeViewModel>(employee));
     }
 
-    public IActionResult Create() => View(nameof(Edit), new EmployeesViewModel());
+    public IActionResult Create() => View(nameof(Edit), new EmployeeViewModel());
 
     public IActionResult Edit(int? id)
     {
-        if (id == null) return View(new EmployeesViewModel());// если id отсутствует
+        if (id == null) return View(new EmployeeViewModel());// если id отсутствует
 
         var employee = _Employees.GetById((int)id);
         if (employee is null)
             return NotFound();
 
-        var view_model = _Mapper.Map<EmployeesViewModel>(employee);//automapper
+
+
+        var view_model = _Mapper.Map<EmployeeViewModel>(employee);//automapper
 
         //var view_model = employee.ToView();//ручной Mapping
 
@@ -67,7 +79,7 @@ public class EmployeesController : Controller
     }
 
     [HttpPost]
-    public IActionResult Edit(EmployeesViewModel Model)
+    public IActionResult Edit(EmployeeViewModel Model)
     {
         //ручная проверка валидации модели
         if (Model.LastName == "QWE" && Model.FirstName == "QWE" && Model.Patronymic == "QWE")
@@ -112,7 +124,7 @@ public class EmployeesController : Controller
         if (employee is null)
             return NotFound();
 
-        var view_model = new EmployeesViewModel
+        var view_model = new EmployeeViewModel
         {
             Id = employee.Id,
             FirstName = employee.FirstName,

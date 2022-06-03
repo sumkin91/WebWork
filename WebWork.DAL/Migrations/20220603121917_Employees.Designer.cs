@@ -12,7 +12,7 @@ using WebWork.DAL.Context;
 namespace WebWork.DAL.Migrations
 {
     [DbContext(typeof(WebWorkDB))]
-    [Migration("20220531130619_Employees")]
+    [Migration("20220603121917_Employees")]
     partial class Employees
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -60,16 +60,20 @@ namespace WebWork.DAL.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Patronymic")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FirstName", "LastName", "Patronymic", "Age")
+                        .IsUnique()
+                        .HasFilter("[Patronymic] IS NOT NULL");
 
                     b.ToTable("Employees");
                 });

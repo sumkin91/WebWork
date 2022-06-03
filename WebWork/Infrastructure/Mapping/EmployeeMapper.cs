@@ -8,9 +8,9 @@ namespace WebWork.Infrastructure.Mapping;
 public static class EmployeeMapper
 {
     [return: NotNullIfNotNull("employee")]
-    public static EmployeesViewModel? ToView(this Employee? employee) => employee is null
+    public static EmployeeViewModel? ToView(this Employee? employee) => employee is null
         ? null
-        : new EmployeesViewModel
+        : new EmployeeViewModel
         {
             Id = employee.Id,
             LastName = employee.LastName,
@@ -20,7 +20,7 @@ public static class EmployeeMapper
         };
 
     [return: NotNullIfNotNull("employee")]
-    public static Employee? FromView(this EmployeesViewModel? employee) => employee is null
+    public static Employee? FromView(this EmployeeViewModel? employee) => employee is null
         ? null
         : new Employee
         {
@@ -31,7 +31,7 @@ public static class EmployeeMapper
             Age = employee.Age,
         };
 
-    public static IEnumerable<EmployeesViewModel?> ToView(this IEnumerable<Employee?> employees) => employees.Select(ToView);
+    public static IEnumerable<EmployeeViewModel?> ToView(this IEnumerable<Employee?> employees) => employees.Select(ToView);
 
-    public static IEnumerable<Employee?> FromView(this IEnumerable<EmployeesViewModel?> employees) => employees.Select(FromView);
+    public static IEnumerable<Employee?> FromView(this IEnumerable<EmployeeViewModel?> employees) => employees.Select(FromView);
 }
