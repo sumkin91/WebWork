@@ -5,12 +5,15 @@ namespace WebWork.Services.Interfaces;
 
 public interface IEmployeeData
 {
-    public IEnumerable<Employee> GetAll();
-    public Employee? GetById(int id);   
+    int GetCount();
+    IEnumerable<Employee> GetAll();
+    Employee? GetById(int id);   
 
-    public int Add(Employee employee); 
+    IEnumerable<Employee> Get(int Skip, int Take);
 
-    public bool Edit(Employee employee);
+    int Add(Employee employee); 
 
-    public bool Delete(int id);
+    bool Edit(Employee employee);
+
+    bool Delete(int id);
 }

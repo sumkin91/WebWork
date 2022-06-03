@@ -2,7 +2,7 @@
 
 namespace WebWork.Data;
 
-public class TestData
+public static class TestData
 {
     public static ICollection<Employee> Employees {get; } = new List<Employee>
     {

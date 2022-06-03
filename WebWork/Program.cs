@@ -3,13 +3,56 @@ using WebWork.Infrastructure.Convertions;
 using WebWork.Services.Interfaces;
 using WebWork.DAL.Context;
 using Microsoft.EntityFrameworkCore; //for db context
+using Microsoft.AspNetCore.Identity; //for base identity
 using WebWork.Data;
 using WebWork.Services.InMemory;
 using WebWork.Services.InSQL;
+using WebWork.Domain.Entities.Identity;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 var services = builder.Services;
+//добавление Identity в сервисы и конфигурирование
+//services.AddIdentity<IdentityUser, IdentityRole>();//если не расширять возможности базовых классов
+services.AddIdentity<User, Role>(/*opt => { opt...}*/)
+    .AddEntityFrameworkStores<WebWorkDB>() //указание в каком контекте БД хранить
+    .AddDefaultTokenProviders();//генерация токена после сброма пароля
+
+//конфигурирование системы индентификации
+services.Configure<IdentityOptions>(opt =>
+{
+
+    opt.Password.RequireDigit = false;
+    opt.Password.RequireLowercase = false;
+    opt.Password.RequireUppercase = false;
+    opt.Password.RequireNonAlphanumeric = false;
+    opt.Password.RequiredLength = 3;
+    opt.Password.RequiredUniqueChars = 3;
+
+    opt.User.RequireUniqueEmail = false;
+    opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ1234567890";
+    //настройки блокировки
+    opt.Lockout.AllowedForNewUsers = false;
+    opt.Lockout.MaxFailedAccessAttempts = 10;
+    opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+
+});
+
+//настройка cookies
+services.ConfigureApplicationCookie(opt =>
+{
+    opt.Cookie.Name = "GB.WebWork";
+    opt.Cookie.HttpOnly = true;         //настройка передачи
+
+    opt.ExpireTimeSpan = TimeSpan.FromDays(10); //заново получить cook
+    //система перенаправления при регистрации и выходе (контроллер/экшн)
+    opt.LoginPath = "/Account/Login";
+    opt.LogoutPath = "/Account/Logout";
+    opt.AccessDeniedPath = "/Account/AccessDenied";//отказ в доступе
+
+    opt.SlidingExpiration = true;//новый идентификатор сеанса при каждом заходе
+});
 
 //регистрация сервиса
 //универсальный способ добавления в контейнер сервисов сервисы (как синглтон, но может меняться)
@@ -59,6 +102,10 @@ if (app.Environment.IsDevelopment())
 app.UseStaticFiles();//добавление возможности серверу выдавать статическое содержимое (js, css, png, fonts ...) хранится в wwwroot (по умолчанию)
 
 app.UseRouting();//подключение маршрутизации (возможность функциям приложения использовать данные внутри приложения - извлечения информации из маршрута (пути))
+
+app.UseAuthentication(); //после роутинга обязательно
+
+app.UseAuthorization();
 
 app.UseMiddleware<TestMiddleware>();//добавление промежуточного ПО
 

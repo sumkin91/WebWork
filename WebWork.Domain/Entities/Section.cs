@@ -16,4 +16,6 @@ public class Section: NamedEntity, IOrderedEntity
     public Section? Parent { get; set; }//навигационное свойство
 
     public ICollection<Product> Products { get; set; } = new HashSet<Product>(); //коллекция продуктов
+
+    public override string ToString() => $"(id:{Id}) Name: {Name} Order: {Order} ParentId: {ParentId} ";
 }

@@ -20,11 +20,21 @@ public class EmployeesController : Controller
         _Mapper = Mapper;
     }
 
-    public IActionResult Index()
+    public IActionResult Index(int? Page, int PageSize = 15)
     {
-        var employees = _Employees.GetAll();
+        IEnumerable<Employee> employee; 
 
-        var view_models = employees.Select(e => _Mapper.Map<EmployeeViewModel>(e));
+        if(Page is { } page && PageSize > 0)
+        {
+            employee = _Employees.Get(page * PageSize, PageSize);
+        }
+        else employee = _Employees.GetAll();
+
+        var view_models = employee.Select(e => _Mapper.Map<EmployeeViewModel>(e));
+
+        ViewBag.PagesCount = (PageSize > 0)
+            ? (int?)Math.Ceiling(_Employees.GetCount() / (double)PageSize)
+            : null!;
 
         return View(view_models);
     }

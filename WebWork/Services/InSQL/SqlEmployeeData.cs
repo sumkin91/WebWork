@@ -22,7 +22,7 @@ public class SqlEmployeeData : IEmployeeData
         if (employee is null) throw new ArgumentNullException(nameof(employee));
 
         //требуется только для хранения данных в памяти, для БД - не требуется
-        if (_db.Employees.Contains(employee)) return employee.Id;
+        //if (_db.Employees.Contains(employee)) return employee.Id;
        
         _db.Employees.Add(employee);
 
@@ -35,14 +35,17 @@ public class SqlEmployeeData : IEmployeeData
 
     public bool Delete(int id)
     {
-        var employee = GetById(id);
+        //var employee = GetById(id);
+        var employee = _db.Employees
+            .Select(e => new Employee { Id = e.Id}) //только ID достаем
+            .FirstOrDefault(e => e.Id == id);
         if (employee is null)
         {
             _Logger.LogWarning("Запись не найдена при попытке удаления сотрудника с id: {0}", id);
             return false;
         }
 
-        _db.Employees.Remove(employee);
+        _db.Remove(employee);
 
         _db.SaveChanges();// если работа с БД, то вызвать SAveChange() здесь! БД ничего не узнает и идентификатор не будет получен
 
@@ -70,15 +73,23 @@ public class SqlEmployeeData : IEmployeeData
         db_employee.FirstName = employee.FirstName;
         db_employee.Patronymic = employee.Patronymic;
         db_employee.Age = employee.Age;
-
-        
-        
+       
         _db.SaveChanges();// если работа с БД, то вызвать SAveChange() здесь! БД ничего не узнает и идентификатор не будет получен
         
         _Logger.LogInformation("Сотрудник {0} отредактирован", employee);
 
         return true;
     }
+
+    public IEnumerable<Employee> Get(int Skip, int Take)
+    {
+        IQueryable<Employee> query = _db.Employees;
+        if (Take == 0) return Enumerable.Empty<Employee>();
+
+        if (Skip > 0) query = query.Skip(Skip);
+        
+        return query.Take(Take);
+    } 
 
     public IEnumerable<Employee> GetAll() 
     {
@@ -87,6 +98,11 @@ public class SqlEmployeeData : IEmployeeData
 
     public Employee? GetById(int id)
     {
-        return _db.Employees.Where(e => e.Id == id).FirstOrDefault();
+        //return _db.Employees.FirstOrDefault(e => e.Id == id);
+        //return _db.Employees.SingleOrDefault(e => e.Id == id);
+        return _db.Employees.Find(id);
     }
+
+    public int GetCount() => _db.Employees.Count();
+
 }
