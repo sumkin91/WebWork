@@ -1,10 +1,12 @@
 ﻿using WebWork.Domain.Entities;
 using WebWork.Services.Interfaces;
 using WebWork.DAL.Context;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace WebWork.Services.InSQL;
 
-public class SqlEmployeeData : IEmployeesData
+public class SqlEmployeeData : IEmployeeData
 {
     private readonly WebWorkDB _db;
     private readonly ILogger<SqlEmployeeData> _Logger;
@@ -42,6 +44,8 @@ public class SqlEmployeeData : IEmployeesData
 
         _db.Employees.Remove(employee);
 
+        _db.SaveChanges();// если работа с БД, то вызвать SAveChange() здесь! БД ничего не узнает и идентификатор не будет получен
+
         _Logger.LogInformation("Сотрудник {0} удален", employee);
 
         return true;
@@ -52,7 +56,7 @@ public class SqlEmployeeData : IEmployeesData
         if (employee is null) throw new ArgumentNullException(nameof(employee));
 
         //требуется только для хранения данных в памяти, для БД - не требуется
-        if (_db.Employees.Contains(employee)) return true;
+        //if (_db.Employees.Contains(employee)) return true;
 
         var db_employee = GetById(employee.Id);
         if (db_employee is null)
@@ -67,9 +71,10 @@ public class SqlEmployeeData : IEmployeesData
         db_employee.Patronymic = employee.Patronymic;
         db_employee.Age = employee.Age;
 
-        _db.Employees.Add(db_employee);
+        
+        
         _db.SaveChanges();// если работа с БД, то вызвать SAveChange() здесь! БД ничего не узнает и идентификатор не будет получен
-
+        
         _Logger.LogInformation("Сотрудник {0} отредактирован", employee);
 
         return true;

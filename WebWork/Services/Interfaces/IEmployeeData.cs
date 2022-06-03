@@ -3,7 +3,7 @@ using WebWork.Domain.Entities;
 
 namespace WebWork.Services.Interfaces;
 
-public interface IEmployeesData
+public interface IEmployeeData
 {
     public IEnumerable<Employee> GetAll();
     public Employee? GetById(int id);   

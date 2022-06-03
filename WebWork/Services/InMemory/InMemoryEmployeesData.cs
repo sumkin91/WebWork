@@ -5,7 +5,7 @@ using WebWork.Domain.Entities;
 
 namespace WebWork.Services.InMemory;
 
-public class InMemoryEmployeesData : IEmployeesData
+public class InMemoryEmployeesData : IEmployeeData
 {
     private readonly ICollection<Employee> _Employees;
     private readonly ILogger<InMemoryEmployeesData> _Logger;

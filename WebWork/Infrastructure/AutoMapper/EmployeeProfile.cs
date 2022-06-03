@@ -4,11 +4,11 @@ using WebWork.Domain.Entities;
 
 namespace WebWork.Infrastructure.AutoMapper;
 
-public class EmployeesProfile : Profile
+public class EmployeeProfile : Profile
 {
-    public EmployeesProfile()
+    public EmployeeProfile()
     {
-        CreateMap<Employee, EmployeesViewModel>() //связывание полей
+        CreateMap<Employee, EmployeeViewModel>() //связывание полей
            // .ForMember(m => m.FirstName, o => o.MapFrom(e => e.FirstName)) //связывание полей при отличии
             .ReverseMap(); //для двухсторонней связи (two-way)
     }

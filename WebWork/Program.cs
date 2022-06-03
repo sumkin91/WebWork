@@ -18,7 +18,7 @@ var services = builder.Services;
 //services.AddScoped<IProductData, InMemoryProductData>();//тестовые данные
 
 services.AddScoped<IProductData, SqlProductData>();
-services.AddScoped<IEmployeesData, SqlEmployeeData>();
+services.AddScoped<IEmployeeData, SqlEmployeeData>();
 
 services.AddDbContext<WebWorkDB>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));//добавление контекста БД, указывается строка подключения в аргументе (см. appsettings.json)
 
