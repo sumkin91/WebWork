@@ -1,7 +1,8 @@
-jQuery(function($) {'use strict',
+jQuery(function ($) {
 
 	var form = $('.contact-form');
-	form.submit(function () {'use strict',
+	form.submit(function () {
+
 		$this = $(this);
 		$.post("sendemail.php", $(".contact-form").serialize(),function(result){
 			if(result.type == 'success'){
@@ -32,7 +33,7 @@ jQuery(function($) {'use strict',
 		clickable: false
 	});
 
-	var image = '~/images/map-icon.png';
+	var image = 'images/map-icon.png';
 	map.addMarker({
 		lat: 43.1580159,
 		lng: -77.6030777,
