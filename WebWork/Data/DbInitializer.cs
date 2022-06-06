@@ -1,5 +1,7 @@
 ﻿using WebWork.DAL.Context;
 using Microsoft.EntityFrameworkCore; //для миграции
+using Microsoft.AspNetCore.Identity;
+using WebWork.Domain.Entities.Identity;
 
 namespace WebWork.Data;
 
@@ -8,10 +10,22 @@ public class DbInitializer
     private readonly WebWorkDB _db;
 
     private readonly ILogger<DbInitializer> _Logger;
-    public DbInitializer(WebWorkDB db, ILogger<DbInitializer> Logger)
+
+    private readonly RoleManager<Role> _RoleManager;
+
+    private readonly UserManager<User> _UserManager;
+
+    public DbInitializer(
+        WebWorkDB db, 
+        ILogger<DbInitializer> Logger,
+        RoleManager<Role> RoleManager,
+        UserManager<User> UserManager
+        )
     {
         _db = db;
         _Logger = Logger;
+        _RoleManager = RoleManager;
+        _UserManager = UserManager;
     }
 
     public async Task<bool> RemoveAsync(CancellationToken Cancel = default)
@@ -49,7 +63,7 @@ public class DbInitializer
         {
             await InitializeProductsAsync(Cancel);
             await InitializeEmployeesAsync(Cancel);
-            
+            await InitializeIdentitySync(Cancel);
         }
 
         _Logger.LogInformation("Инициализация БД выполнена!");
@@ -129,6 +143,65 @@ public class DbInitializer
         await _db.SaveChangesAsync(Cancel);//сохранение изменений
 
         _Logger.LogInformation("Добавление в БД секций выполнено успешно!");
+
+    }
+
+    private async Task InitializeIdentitySync(CancellationToken Cancel)
+    {
+        _Logger.LogInformation("Инициализация БД Identity");
+
+        //локальная функция
+        async Task CheckRoleAsync(string RoleName)
+        {
+
+            if (await _RoleManager.RoleExistsAsync(RoleName))
+                _Logger.LogInformation("Роль {0} существует в БД", RoleName);
+            else
+            {
+                _Logger.LogInformation("Роль {0} отсутствует в БД. Создание ...", RoleName);
+                await _RoleManager.CreateAsync(new Role { Name = RoleName });
+                _Logger.LogInformation("Роль {0} создана", RoleName);
+            }
+        }
+
+        await CheckRoleAsync(Role.Administrators);
+        await CheckRoleAsync(Role.Users);
+
+        if(await _UserManager.FindByNameAsync(User.Administrator) is null)
+        {
+            _Logger.LogInformation("Пользователь {0} отсутствует в БД. Создание ...", User.Administrator);
+
+            var admin = new User()
+            {
+                UserName = User.Administrator
+            };
+
+            var creation_result = await _UserManager.CreateAsync(admin, User.AdminPassword);
+
+            if(creation_result.Succeeded)
+            {
+                _Logger.LogInformation("Пользователь {0} создан. Наделяю ролью администратора", User.Administrator);
+
+                await _UserManager.AddToRoleAsync(admin, Role.Administrators);
+
+                _Logger.LogInformation("Пользователь {0} наделен ролью администратора", User.Administrator);
+            }
+            else
+            {
+                var errors_message = creation_result.Errors.Select(e => e.Description);
+                _Logger.LogError("Учетная запись {0} не создана. Ошибки: {1}",
+                    User.Administrator,
+                    string.Join(", ", errors_message));
+
+                throw new InvalidOperationException($"Невозможно создать {User.Administrator}. Ошибка: {errors_message}.");
+            }
+        }
+        else
+        {
+            _Logger.LogInformation("Пользователь {0} существует.", User.Administrator);
+        }
+
+        _Logger.LogInformation("Инициализация БД Identity завершена");
 
     }
 }
