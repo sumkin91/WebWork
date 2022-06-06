@@ -1,4 +1,8 @@
-﻿<section id="cart_items">
+﻿@model CartViewModel
+@{
+    ViewBag.Title = "Корзина";
+}
+<section id="cart_items">
     <div class="container">
         <div class="breadcrumbs">
             <ol class="breadcrumb">
@@ -7,96 +11,57 @@
             </ol>
         </div>
         <div class="table-responsive cart_info">
-            <table class="table table-condensed">
-                <thead>
-                    <tr class="cart_menu">
-                        <td class="image">Товар</td>
-                        <td class="description"></td>
-                        <td class="price">Цена</td>
-                        <td class="quantity">Кол-во.</td>
-                        <td class="total">Итого</td>
-                        <td></td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="cart_product">
-                            <a href=""><img src="~/images/cart/one.png" alt=""></a>
-                        </td>
-                        <td class="cart_description">
-                            <h4><a href="">Colorblock Scuba</a></h4>
-                            <p>Артикул: 1089772</p>
-                        </td>
-                        <td class="cart_price">
-                            <p>$59</p>
-                        </td>
-                        <td class="cart_quantity">
-                            <div class="cart_quantity_button">
-                                <a class="cart_quantity_up" href=""> + </a>
-                                <input class="cart_quantity_input" type="text" name="quantity" value="1" autocomplete="off" size="2">
-                                <a class="cart_quantity_down" href=""> - </a>
-                            </div>
-                        </td>
-                        <td class="cart_total">
-                            <p class="cart_total_price">$59</p>
-                        </td>
-                        <td class="cart_delete">
-                            <a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td class="cart_product">
-                            <a href=""><img src="~/images/cart/two.png" alt=""></a>
-                        </td>
-                        <td class="cart_description">
-                            <h4><a href="">Colorblock Scuba</a></h4>
-                            <p>Артикул: 1089772</p>
-                        </td>
-                        <td class="cart_price">
-                            <p>$59</p>
-                        </td>
-                        <td class="cart_quantity">
-                            <div class="cart_quantity_button">
-                                <a class="cart_quantity_up" href=""> + </a>
-                                <input class="cart_quantity_input" type="text" name="quantity" value="1" autocomplete="off" size="2">
-                                <a class="cart_quantity_down" href=""> - </a>
-                            </div>
-                        </td>
-                        <td class="cart_total">
-                            <p class="cart_total_price">$59</p>
-                        </td>
-                        <td class="cart_delete">
-                            <a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="cart_product">
-                            <a href=""><img src="~/images/cart/three.png" alt=""></a>
-                        </td>
-                        <td class="cart_description">
-                            <h4><a href="">Colorblock Scuba</a></h4>
-                            <p>Артикул: 1089772</p>
-                        </td>
-                        <td class="cart_price">
-                            <p>$59</p>
-                        </td>
-                        <td class="cart_quantity">
-                            <div class="cart_quantity_button">
-                                <a class="cart_quantity_up" href=""> + </a>
-                                <input class="cart_quantity_input" type="text" name="quantity" value="1" autocomplete="off" size="2">
-                                <a class="cart_quantity_down" href=""> - </a>
-                            </div>
-                        </td>
-                        <td class="cart_total">
-                            <p class="cart_total_price">$59</p>
-                        </td>
-                        <td class="cart_delete">
-                            <a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            @if (Model.Items.Any())
+            {
+                <table class="table table-condensed">
+                    <thead>
+                        <tr class="cart_menu">
+                            <td class="image">Товар</td>
+                            <td class="description">Описание</td>
+                            <td class="price">Цена</td>
+                            <td class="quantity">Кол-во.</td>
+                            <td class="total">Итого</td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var (product, quantity) in Model.Items)
+                        {
+                            <tr>
+                                <td class="cart_product">
+                                    <a href=""><img src="images/shop/@product.ImageUrl" alt="@product.Name"></a>
+                                </td>
+                                <td class="cart_description">
+                                    <h4><a href="">@product.Name</a></h4>
+                                    <p>Артикул: @product.Id?.ToString("0000000")</p>
+                                </td>
+                                <td class="cart_price">
+                                    <p>@product.Price.ToString("c")</p>
+                                </td>
+                                <td class="cart_quantity">
+                                    <div class="cart_quantity_button">
+                                        <a class="cart_quantity_up" asp-action="Add" asp-route-Id="@product.Id"> + </a>
+                                        <input class="cart_quantity_input" type="text" name="quantity" value="@quantity" autocomplete="off" size="2">
+                                        <a class="cart_quantity_down" asp-action="Decrement" asp-route-Id="@product.Id"> - </a>
+                                    </div>
+                                </td>
+                                <td class="cart_total">
+                                    <p class="cart_total_price">@((product.Price * quantity).ToString("c"))</p>
+                                </td>
+                                <td class="cart_delete">
+                                    <a class="cart_quantity_delete" asp-action="Remove" asp-route-Id="@product.Id">
+                                        <i class="fa fa-times"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>Товары в корзине отсутствуют!</p>
+            }
         </div>
     </div>
 </section> <!--/#cart_items-->
@@ -105,7 +70,7 @@
     <div class="container">
         <div class="heading">
             <h3>Что мы сделаем с этим дальше?</h3>
-            <p>Выберите, есть ли у вас код скидки или бонусные баллы, которые вы хотите использовать или хотите сделать скуидку на доставку.</p>
+            <p>Выберите, есть ли у вас код скидки или бонусные баллы, которые вы хотите использовать или хотите сделать скидку на доставку.</p>
         </div>
         <div class="row">
             <div class="col-sm-6">
@@ -168,7 +133,7 @@
                         <li>Подитог <span>$59</span></li>
                         <li>Эко-сбор <span>$2</span></li>
                         <li>Стоимость доставки <span>Free</span></li>
-                        <li>Итого <span>$61</span></li>
+                        <li>Итого <span>@Model.TotalPrice.ToString("c")</span></li>
                     </ul>
                     <a class="btn btn-default update" href="">Обновить</a>
                     <a class="btn btn-default check_out" href="">Оформить заказ</a>

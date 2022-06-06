@@ -1,5 +1,7 @@
 ﻿using WebWork.DAL.Context;
 using Microsoft.EntityFrameworkCore; //для миграции
+using Microsoft.AspNetCore.Identity;
+using WebWork.Domain.Entities.Identity;
 
 namespace WebWork.Data;
 
@@ -8,10 +10,22 @@ public class DbInitializer
     private readonly WebWorkDB _db;
 
     private readonly ILogger<DbInitializer> _Logger;
-    public DbInitializer(WebWorkDB db, ILogger<DbInitializer> Logger)
+
+    private readonly RoleManager<Role> _RoleManager;
+
+    private readonly UserManager<User> _UserManager;
+
+    public DbInitializer(
+        WebWorkDB db, 
+        ILogger<DbInitializer> Logger,
+        RoleManager<Role> RoleManager,
+        UserManager<User> UserManager
+        )
     {
         _db = db;
         _Logger = Logger;
+        _RoleManager = RoleManager;
+        _UserManager = UserManager;
     }
 
     public async Task<bool> RemoveAsync(CancellationToken Cancel = default)
@@ -49,7 +63,7 @@ public class DbInitializer
         {
             await InitializeProductsAsync(Cancel);
             await InitializeEmployeesAsync(Cancel);
-            
+            await InitializeIdentitySync(Cancel);
         }
 
         _Logger.LogInformation("Инициализация БД выполнена!");
@@ -66,52 +80,12 @@ public class DbInitializer
             return;
         }
 
-        await using var transaction = await _db.Database.BeginTransactionAsync(Cancel); //начало транзакции, если до коммита транзакции не отработают, то данные внесены в БД не будут
-
-        _Logger.LogInformation("Добавление в БД секций...");
-        await _db.Sections.AddRangeAsync(TestData.Sections, Cancel);// добавление в БД данные секций
-
-        await _db.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT [dbo].[Sections] ON", Cancel);// сырой sql - переключение таблицы в спец режим для работы с ключами
-        await _db.SaveChangesAsync(Cancel);//сохранение изменений
-        await _db.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT [dbo].[Sections] OFF", Cancel);
-        _Logger.LogInformation("Добавление в БД секций выполнено успешно!");
-
-
-        _Logger.LogInformation("Добавление в БД брендов...");
-        await _db.Brands.AddRangeAsync(TestData.Brands, Cancel);
-
-        await _db.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT [dbo].[Brands] ON", Cancel);
-        await _db.SaveChangesAsync(Cancel);
-        await _db.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT [dbo].[Brands] OFF", Cancel);
-        _Logger.LogInformation("Добавление в БД брендов выполнено успешно!");
-
-        _Logger.LogInformation("Добавление в БД товаров...");
-        await _db.Products.AddRangeAsync(TestData.Products, Cancel);
-
-        await _db.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT [dbo].[Products] ON", Cancel);
-        await _db.SaveChangesAsync(Cancel);
-        await _db.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT [dbo].[Products] OFF", Cancel);
-        _Logger.LogInformation("Добавление в БД товаров выполнено успешно!");
-
-        await transaction.CommitAsync(Cancel);//принимаем транзакцию
-    }
-
-    private async Task InitializeProductsAsync_NoWork(CancellationToken Cancel)
-    {
-        _Logger.LogInformation("Инициализация БД тестовыми данными Продуктов...");
-
-        if (await _db.Products.AnyAsync(Cancel).ConfigureAwait(false))//если что-то есть в БД
-        {
-            _Logger.LogInformation("Инициализация БД тестовыми данными не требуется");
-            return;
-        }
-
         //удаление ID у сущностей
         var sections_pool = TestData.Sections.ToDictionary(s => s.Id);
         var brands_pool = TestData.Brands.ToDictionary(b => b.Id);
 
         foreach (var child_section in TestData.Sections.Where(s => s.ParentId is not null))
-            child_section.Parent = sections_pool[child_section.Id];
+            child_section.Parent = sections_pool[(int)child_section.ParentId!];//опасное место!!! делали циклическую запись через Id той же секции(так делать нельзя! не собиралось!)
 
         foreach (var product in TestData.Products)
         {
@@ -121,7 +95,7 @@ public class DbInitializer
 
             product.Id = 0;
             product.SectionId = 0;
-            product.BrandId = 0;
+            product.BrandId = null;
         }
 
         foreach (var brand in TestData.Brands)
@@ -130,7 +104,7 @@ public class DbInitializer
         foreach (var section in TestData.Sections)
         {
             section.Id = 0;
-            section.ParentId = 0;
+            section.ParentId = null;
             _Logger.LogInformation(section.ToString());
         }
 
@@ -169,6 +143,65 @@ public class DbInitializer
         await _db.SaveChangesAsync(Cancel);//сохранение изменений
 
         _Logger.LogInformation("Добавление в БД секций выполнено успешно!");
+
+    }
+
+    private async Task InitializeIdentitySync(CancellationToken Cancel)
+    {
+        _Logger.LogInformation("Инициализация БД Identity");
+
+        //локальная функция
+        async Task CheckRoleAsync(string RoleName)
+        {
+
+            if (await _RoleManager.RoleExistsAsync(RoleName))
+                _Logger.LogInformation("Роль {0} существует в БД", RoleName);
+            else
+            {
+                _Logger.LogInformation("Роль {0} отсутствует в БД. Создание ...", RoleName);
+                await _RoleManager.CreateAsync(new Role { Name = RoleName });
+                _Logger.LogInformation("Роль {0} создана", RoleName);
+            }
+        }
+
+        await CheckRoleAsync(Role.Administrators);
+        await CheckRoleAsync(Role.Users);
+
+        if(await _UserManager.FindByNameAsync(User.Administrator) is null)
+        {
+            _Logger.LogInformation("Пользователь {0} отсутствует в БД. Создание ...", User.Administrator);
+
+            var admin = new User()
+            {
+                UserName = User.Administrator
+            };
+
+            var creation_result = await _UserManager.CreateAsync(admin, User.AdminPassword);
+
+            if(creation_result.Succeeded)
+            {
+                _Logger.LogInformation("Пользователь {0} создан. Наделяю ролью администратора", User.Administrator);
+
+                await _UserManager.AddToRoleAsync(admin, Role.Administrators);
+
+                _Logger.LogInformation("Пользователь {0} наделен ролью администратора", User.Administrator);
+            }
+            else
+            {
+                var errors_message = creation_result.Errors.Select(e => e.Description);
+                _Logger.LogError("Учетная запись {0} не создана. Ошибки: {1}",
+                    User.Administrator,
+                    string.Join(", ", errors_message));
+
+                throw new InvalidOperationException($"Невозможно создать {User.Administrator}. Ошибка: {errors_message}.");
+            }
+        }
+        else
+        {
+            _Logger.LogInformation("Пользователь {0} существует.", User.Administrator);
+        }
+
+        _Logger.LogInformation("Инициализация БД Identity завершена");
 
     }
 }

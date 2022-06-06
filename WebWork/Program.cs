@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity; //for base identity
 using WebWork.Data;
 using WebWork.Services.InMemory;
 using WebWork.Services.InSQL;
+using WebWork.Services.InCookies;
 using WebWork.Domain.Entities.Identity;
 
 
@@ -49,7 +50,7 @@ services.ConfigureApplicationCookie(opt =>
     //система перенаправления при регистрации и выходе (контроллер/экшн)
     opt.LoginPath = "/Account/Login";
     opt.LogoutPath = "/Account/Logout";
-    opt.AccessDeniedPath = "/Account/AccessDenied";//отказ в доступе
+    opt.AccessDeniedPath = "/Account/AccessDenide";//отказ в доступе!!!!!!!!!
 
     opt.SlidingExpiration = true;//новый идентификатор сеанса при каждом заходе
 });
@@ -62,6 +63,7 @@ services.ConfigureApplicationCookie(opt =>
 
 services.AddScoped<IProductData, SqlProductData>();
 services.AddScoped<IEmployeeData, SqlEmployeeData>();
+services.AddScoped<ICartService, InCookiesCartService>();
 
 services.AddDbContext<WebWorkDB>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));//добавление контекста БД, указывается строка подключения в аргументе (см. appsettings.json)
 
@@ -94,6 +96,7 @@ using(var scope = app.Services.CreateScope())//после построения �
 
 //подключим страничку отладчика в режиме разработчика, на хостинге работать не будет
 //см. поле "ASPNETCORE_ENVIRONMENT" в Properties/launchSettings.json раздела profiles
+
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -104,7 +107,6 @@ app.UseStaticFiles();//добавление возможности сервер�
 app.UseRouting();//подключение маршрутизации (возможность функциям приложения использовать данные внутри приложения - извлечения информации из маршрута (пути))
 
 app.UseAuthentication(); //после роутинга обязательно
-
 app.UseAuthorization();
 
 app.UseMiddleware<TestMiddleware>();//добавление промежуточного ПО

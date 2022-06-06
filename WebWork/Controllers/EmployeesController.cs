@@ -5,10 +5,13 @@ using WebWork.Infrastructure.Mapping;// ручной маппер
 using AutoMapper;
 //using WebWork.Models.InMemory;
 using WebWork.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
+using WebWork.Domain.Entities.Identity;
 
 namespace WebWork.Controllers;
 
 //[Route("Staff/{action=Index}/{id?}")] // переопределение адреса контроллера
+[Authorize]//работа с данным контроллером только авторизованным пользователям
 public class EmployeesController : Controller
 {
     private readonly IEmployeeData _Employees;
@@ -49,9 +52,10 @@ public class EmployeesController : Controller
 
         return View(_Mapper.Map<EmployeeViewModel>(employee));
     }
-
+    [Authorize(Roles = Role.Administrators)]
     public IActionResult Create() => View(nameof(Edit), new EmployeeViewModel());
 
+    [Authorize(Roles = Role.Administrators)]
     public IActionResult Edit(int? id)
     {
         if (id == null) return View(new EmployeeViewModel());// если id отсутствует
@@ -79,6 +83,7 @@ public class EmployeesController : Controller
     }
 
     [HttpPost]
+    [Authorize(Roles = Role.Administrators)]
     public IActionResult Edit(EmployeeViewModel Model)
     {
         //ручная проверка валидации модели
@@ -114,6 +119,7 @@ public class EmployeesController : Controller
     }
 
     //опреации удаления не реализуются путем GET запроса
+    [Authorize(Roles = Role.Administrators)]//работа только с ролью админа
     public IActionResult Delete(int id)
     {
         //так делать нельзя, могут взломать путем отправки индексов
@@ -137,6 +143,7 @@ public class EmployeesController : Controller
     }
 
     [HttpPost]
+    [Authorize(Roles = Role.Administrators)]
     public IActionResult DeleteConfirmed(int id)
     {
         if (!_Employees.Delete(id)) return NotFound();

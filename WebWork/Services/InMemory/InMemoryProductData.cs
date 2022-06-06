@@ -5,6 +5,7 @@ using WebWork.Domain;
 
 namespace WebWork.Services.InMemory
 {
+    [Obsolete("Используйте SqlProductData")]
     public class InMemoryProductData : IProductData
     {
         public IEnumerable<Section> GetSections() => TestData.Sections;
@@ -25,6 +26,21 @@ namespace WebWork.Services.InMemory
                 query = query.Where(q => q.SectionId == brand_id);
 
             return query;
+        }
+
+        public Section? GetSectionById(int Id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Brand? GetBrandById(int Id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Product? GetProductById(int Id)
+        {
+            throw new NotImplementedException();
         }
     }
 }
