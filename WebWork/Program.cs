@@ -12,8 +12,26 @@ using WebWork.Domain.Entities.Identity;
 
 
 var builder = WebApplication.CreateBuilder(args);
-
+var config = builder.Configuration;
 var services = builder.Services;
+//config.GetSection("DB")["Type"];
+var db_type = config["DB:Type"];
+var db_connection_string = config.GetConnectionString(db_type);
+
+switch (db_type)
+{
+    case "DockerDB"://как SqlServer
+    case "SqlServer":
+        services.AddDbContext<WebWorkDB>(opt => opt.UseSqlServer(db_connection_string));
+        break;
+    case "Sqlite":
+        services.AddDbContext<WebWorkDB>(opt => opt.UseSqlite(db_connection_string, o => o.MigrationsAssembly("WebWork.DAL.Sqlite")));
+        break;
+}
+//это уже не надо!
+//services.AddDbContext<WebWorkDB>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));//добавление контекста БД, указывается строка подключения в аргументе (см. appsettings.json)
+services.AddScoped<DbInitializer>();//инициализатор БД
+
 //добавление Identity в сервисы и конфигурирование
 //services.AddIdentity<IdentityUser, IdentityRole>();//если не расширять возможности базовых классов
 services.AddIdentity<User, Role>(/*opt => { opt...}*/)
@@ -64,10 +82,9 @@ services.ConfigureApplicationCookie(opt =>
 services.AddScoped<IProductData, SqlProductData>();
 services.AddScoped<IEmployeeData, SqlEmployeeData>();
 services.AddScoped<ICartService, InCookiesCartService>();
+services.AddScoped<IOrderService, SqlOrderService>();
 
-services.AddDbContext<WebWorkDB>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));//добавление контекста БД, указывается строка подключения в аргументе (см. appsettings.json)
 
-services.AddScoped<DbInitializer>();//инициализатор БД
 
 //объект создается единожды (в области будет только данный объект)
 //builder.Services.AddSingleton<IEmployeesData, InMemoryEmployeesData>();
@@ -79,6 +96,7 @@ services.AddScoped<DbInitializer>();//инициализатор БД
 services.AddControllersWithViews(opt => //настройка сервисов путем добавления контроллеров и представлений 
 {
     opt.Conventions.Add(new TestConvertion()); //реализация добавления и/или удаления соглашений
+    opt.Conventions.Add(new AddAreaToControllerConvertion());
 }
 );
 
@@ -86,12 +104,12 @@ services.AddAutoMapper(typeof(Program));//добавление автомапп�
 
 var app = builder.Build();
 
-using(var scope = app.Services.CreateScope())//после построения инициализация БД
+using (var scope = app.Services.CreateScope())//после построения инициализация БД
 {
     var db_init = scope.ServiceProvider.GetService<DbInitializer>();
     await db_init.InitializeAsync(
-        RemoveBefore: app.Configuration.GetValue("DbRecreated",false),
-        AddTestData: app.Configuration.GetValue("DbRecreated", false));
+        RemoveBefore: app.Configuration.GetValue("DB:DbRecreated", false),
+        AddTestData: app.Configuration.GetValue("DB:DbRecreated", false));
 }
 
 //подключим страничку отладчика в режиме разработчика, на хостинге работать не будет
@@ -118,8 +136,17 @@ app.UseWelcomePage("/welcome");
 //app.MapDefaultControllerRoute();//настройка маршрутизации
 
 //конфигурация машрутизации, на основе tag-helperы строят адреса на страничках
-app.MapControllerRoute( 
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+      name: "areas",
+      pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+    );
+
+    endpoints.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+});
 
 app.Run();

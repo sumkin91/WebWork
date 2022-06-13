@@ -5,15 +5,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\css\site.css" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Views\Shared\Components\Brands\Default.cshtml" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
@@ -29,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WebWork.DAL.Sqlite\WebWork.DAL.Sqlite.csproj" />
     <ProjectReference Include="..\WebWork.DAL\WebWork.DAL.csproj" />
     <ProjectReference Include="..\WebWork.Domain\WebWork.Domain.csproj" />
   </ItemGroup>

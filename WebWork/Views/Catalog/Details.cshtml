@@ -53,7 +53,7 @@
 							<div class="product-information"><!--/product-information-->
 								<img src="~/images/product-details/new.jpg" class="newarrival" alt="" />
 								<h2>@Model.Name</h2>
-								<p>Артикул: @Model.Id.ToString()</p>
+								<p>Артикул: @Model.Id?.ToString("0000000")</p>
 								<img src="~/images/shop/@Model.ImageUrl" alt="@Model.Name" />
 								<span>
 									<span>@Model.Price.ToString("c")</span>

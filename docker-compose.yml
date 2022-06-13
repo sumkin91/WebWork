@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  db:
+    container_name: MSSQL
+    image: "mcr.microsoft.com/mssql/server:2019-latest"
+
+  webwork:
+    image: ${DOCKER_REGISTRY-}webwork
+    build:
+      context: .
+      dockerfile: WebWork/Dockerfile

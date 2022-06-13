@@ -7,7 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebWork", "WebWork\WebWork.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebWork.Domain", "WebWork.Domain\WebWork.Domain.csproj", "{A1620B55-CDEF-43F3-AECD-6842B0D4FA8E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebWork.DAL", "WebWork.DAL\WebWork.DAL.csproj", "{6C703ADD-E4F2-4C0C-B8F3-A6585AA435BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebWork.DAL", "WebWork.DAL\WebWork.DAL.csproj", "{6C703ADD-E4F2-4C0C-B8F3-A6585AA435BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebWork.DAL.Sqlite", "WebWork.DAL.Sqlite\WebWork.DAL.Sqlite.csproj", "{2467D3BB-8816-4737-BDAC-188F94F26881}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{856F86C7-666D-457E-8263-A65F383D8677}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +31,14 @@ Global
 		{6C703ADD-E4F2-4C0C-B8F3-A6585AA435BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C703ADD-E4F2-4C0C-B8F3-A6585AA435BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C703ADD-E4F2-4C0C-B8F3-A6585AA435BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2467D3BB-8816-4737-BDAC-188F94F26881}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2467D3BB-8816-4737-BDAC-188F94F26881}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2467D3BB-8816-4737-BDAC-188F94F26881}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2467D3BB-8816-4737-BDAC-188F94F26881}.Release|Any CPU.Build.0 = Release|Any CPU
+		{856F86C7-666D-457E-8263-A65F383D8677}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{856F86C7-666D-457E-8263-A65F383D8677}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{856F86C7-666D-457E-8263-A65F383D8677}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{856F86C7-666D-457E-8263-A65F383D8677}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
