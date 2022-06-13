@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WebWork.Services.Interfaces;
+using WebWork.ViewModels;
 
 namespace WebWork.Controllers;
 
@@ -12,7 +14,7 @@ public class CartController : Controller
         _CartService = CartService;
     }
 
-    public IActionResult Index() => View(_CartService.GetViewModel());
+    public IActionResult Index() => View(new CartOrderViewModel { Cart = _CartService.GetViewModel() });
 
     public IActionResult Add(int Id)
     {
@@ -30,5 +32,31 @@ public class CartController : Controller
     {
         _CartService.Remove(Id);
         return RedirectToAction("Index", "Cart");
+    }
+
+    [Authorize, HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> Checkout(OrderViewModel OrderModel, [FromServices] IOrderService OrderService)
+    {
+        if (!ModelState.IsValid)
+            return View(nameof(Index), new CartOrderViewModel
+            {
+                Cart = _CartService.GetViewModel(),
+                Order = OrderModel,
+            });
+
+        var order = await OrderService.CreateOrderAsync(
+            User.Identity!.Name!,
+            _CartService.GetViewModel(),
+            OrderModel);
+
+        _CartService.Clear();
+
+        return RedirectToAction(nameof(OrderConfirmed), new { order.Id });
+    }
+
+    public IActionResult OrderConfirmed(int Id)
+    {
+        ViewBag.OrderId = Id;
+        return View();
     }
 }

@@ -7,7 +7,6 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["WebWork/WebWork.csproj", "WebWork/"]
-COPY ["WebWork.DAL/WebWork.DAL.csproj", "WebWork.DAL/"]
 COPY ["WebWork.Domain/WebWork.Domain.csproj", "WebWork.Domain/"]
 RUN dotnet restore "WebWork/WebWork.csproj"
 COPY . .

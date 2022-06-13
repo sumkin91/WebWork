@@ -64,6 +64,7 @@ services.ConfigureApplicationCookie(opt =>
 services.AddScoped<IProductData, SqlProductData>();
 services.AddScoped<IEmployeeData, SqlEmployeeData>();
 services.AddScoped<ICartService, InCookiesCartService>();
+services.AddScoped<IOrderService, SqlOrderService>();
 
 services.AddDbContext<WebWorkDB>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));//добавление контекста БД, указывается строка подключения в аргументе (см. appsettings.json)
 
@@ -79,6 +80,7 @@ services.AddScoped<DbInitializer>();//инициализатор БД
 services.AddControllersWithViews(opt => //настройка сервисов путем добавления контроллеров и представлений 
 {
     opt.Conventions.Add(new TestConvertion()); //реализация добавления и/или удаления соглашений
+    opt.Conventions.Add(new AddAreaToControllerConvertion());
 }
 );
 
@@ -86,11 +88,11 @@ services.AddAutoMapper(typeof(Program));//добавление автомапп�
 
 var app = builder.Build();
 
-using(var scope = app.Services.CreateScope())//после построения инициализация БД
+using (var scope = app.Services.CreateScope())//после построения инициализация БД
 {
     var db_init = scope.ServiceProvider.GetService<DbInitializer>();
     await db_init.InitializeAsync(
-        RemoveBefore: app.Configuration.GetValue("DbRecreated",false),
+        RemoveBefore: app.Configuration.GetValue("DbRecreated", false),
         AddTestData: app.Configuration.GetValue("DbRecreated", false));
 }
 
@@ -118,8 +120,17 @@ app.UseWelcomePage("/welcome");
 //app.MapDefaultControllerRoute();//настройка маршрутизации
 
 //конфигурация машрутизации, на основе tag-helperы строят адреса на страничках
-app.MapControllerRoute( 
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+      name: "areas",
+      pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+    );
+
+    endpoints.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+});
 
 app.Run();

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using WebWork.Domain.Entities;
 using WebWork.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-
+using WebWork.Domain.Entities.Orders;
 
 namespace WebWork.DAL.Context;
 //обычно контексты данных разделяют (продукты и пользователи)
@@ -17,6 +17,10 @@ public class WebWorkDB : IdentityDbContext<User, Role, string>//класс ко�
     public DbSet<Section> Sections { get; set; } = null!;
 
     public DbSet<Employee> Employees { get; set; } = null!;
+
+    public DbSet<Order> Orders { get; set; } = null!;
+
+    //public DbSet<OrderItems> OrderItems { get; set; } = null!;//для непосредственных обращений к таблице вызов через Set<>
 
     public WebWorkDB(DbContextOptions<WebWorkDB> options) : base(options) // конструктор передает базовому классу объект options (в шаблоне тип контекста)
     {
