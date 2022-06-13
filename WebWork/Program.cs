@@ -12,8 +12,26 @@ using WebWork.Domain.Entities.Identity;
 
 
 var builder = WebApplication.CreateBuilder(args);
-
+var config = builder.Configuration;
 var services = builder.Services;
+//config.GetSection("DB")["Type"];
+var db_type = config["DB:Type"];
+var db_connection_string = config.GetConnectionString(db_type);
+
+switch (db_type)
+{
+    case "DockerDB"://как SqlServer
+    case "SqlServer":
+        services.AddDbContext<WebWorkDB>(opt => opt.UseSqlServer(db_connection_string));
+        break;
+    case "Sqlite":
+        services.AddDbContext<WebWorkDB>(opt => opt.UseSqlite(db_connection_string, o => o.MigrationsAssembly("WebWork.DAL.Sqlite")));
+        break;
+}
+//это уже не надо!
+//services.AddDbContext<WebWorkDB>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));//добавление контекста БД, указывается строка подключения в аргументе (см. appsettings.json)
+services.AddScoped<DbInitializer>();//инициализатор БД
+
 //добавление Identity в сервисы и конфигурирование
 //services.AddIdentity<IdentityUser, IdentityRole>();//если не расширять возможности базовых классов
 services.AddIdentity<User, Role>(/*opt => { opt...}*/)
@@ -66,9 +84,7 @@ services.AddScoped<IEmployeeData, SqlEmployeeData>();
 services.AddScoped<ICartService, InCookiesCartService>();
 services.AddScoped<IOrderService, SqlOrderService>();
 
-services.AddDbContext<WebWorkDB>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));//добавление контекста БД, указывается строка подключения в аргументе (см. appsettings.json)
 
-services.AddScoped<DbInitializer>();//инициализатор БД
 
 //объект создается единожды (в области будет только данный объект)
 //builder.Services.AddSingleton<IEmployeesData, InMemoryEmployeesData>();
@@ -92,8 +108,8 @@ using (var scope = app.Services.CreateScope())//после построения 
 {
     var db_init = scope.ServiceProvider.GetService<DbInitializer>();
     await db_init.InitializeAsync(
-        RemoveBefore: app.Configuration.GetValue("DbRecreated", false),
-        AddTestData: app.Configuration.GetValue("DbRecreated", false));
+        RemoveBefore: app.Configuration.GetValue("DB:DbRecreated", false),
+        AddTestData: app.Configuration.GetValue("DB:DbRecreated", false));
 }
 
 //подключим страничку отладчика в режиме разработчика, на хостинге работать не будет
