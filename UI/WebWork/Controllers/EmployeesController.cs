@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebWork.Infrastructure.Mapping;// ручной маппер
+//using WebWork.Infrastructure.Mapping;// ручной маппер
 using AutoMapper;
 //using WebWork.Models.InMemory;
 using WebWork.Domain.Entities;

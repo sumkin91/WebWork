@@ -1,8 +1,6 @@
 ﻿using WebWork.Domain.Entities.Base;
 using WebWork.Domain.Entities.Base.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebWork.Domain.Entities;
 

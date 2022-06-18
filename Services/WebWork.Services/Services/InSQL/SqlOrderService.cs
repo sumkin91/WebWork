@@ -1,5 +1,4 @@
-﻿using WebWork.Domain;
-using WebWork.DAL.Context;
+﻿using WebWork.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using WebWork.Domain.Entities.Identity;

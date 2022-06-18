@@ -3,7 +3,6 @@ using WebWork.Infrastructure.Convertions;
 using WebWork.DAL.Context;
 using Microsoft.EntityFrameworkCore; //for db context
 using Microsoft.AspNetCore.Identity; //for base identity
-using WebWork.Services.InMemory;
 using WebWork.Domain.Entities.Identity;
 using WebWork.Intefaces.Services;
 using WebWork.Services.Services.InSQL;
