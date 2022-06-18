@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebWork.ViewModels.Identity;
+namespace WebWork.Domain.ViewModels.Identity;
 
 public class RegisterUserViewModel
 {
@@ -15,7 +15,7 @@ public class RegisterUserViewModel
     [MaxLength(255)]
     public string? Password { get; set; }
 
-    [Required (ErrorMessage = "Не ведено подтверждение пароля")]
+    [Required(ErrorMessage = "Не ведено подтверждение пароля")]
     [Display(Name = "Подтверждение пароля")]
     [DataType(DataType.Password)]
     [Compare(nameof(Password), ErrorMessage = "пароль и подтверждение не совпадают!")]

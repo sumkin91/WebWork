@@ -1,10 +1,8 @@
-﻿using WebWork.ViewModels;
-
-namespace WebWork.ViewModels;
+﻿namespace WebWork.Domain.ViewModels;
 
 public class CatalogViewModel
 {
-    public int? SectionId  { get; set; }
+    public int? SectionId { get; set; }
 
     public int? BrandId { get; set; }
 

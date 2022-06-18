@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebWork.ViewModels;
+namespace WebWork.Domain.ViewModels;
 
 public class OrderViewModel
 {
@@ -15,6 +15,6 @@ public class OrderViewModel
 
     [MaxLength(200)]
     [Display(Name = "Комментарий")]
-    [DataType(DataType.MultilineText)]  
+    [DataType(DataType.MultilineText)]
     public string? Description { get; set; }
 }

@@ -1,8 +1,8 @@
 ﻿using WebWork.Domain;
 using WebWork.Domain.Entities;
-using WebWork.Services.Interfaces;
 using WebWork.DAL.Context;
 using Microsoft.EntityFrameworkCore;
+using WebWork.Intefaces.Services;
 
 namespace WebWork.Services.InSQL;
 

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebWork.ViewModels.Identity;
+namespace WebWork.Domain.ViewModels.Identity;
 
 public class LoginViewModel
 {
@@ -16,9 +16,9 @@ public class LoginViewModel
     [MaxLength(255)]
     public string? Password { get; set; }
 
-    [Display(Name ="Запомнить меня?")]
+    [Display(Name = "Запомнить меня?")]
     public bool RememberMe { get; set; }
 
-    [HiddenInput(DisplayValue =false)]
+    [HiddenInput(DisplayValue = false)]
     public string? ReturnUrl { get; set; }
 }

@@ -1,8 +1,8 @@
 ﻿using System.Text.Json;
 using WebWork.Domain.Entities;
-using WebWork.Services.Interfaces;
-using WebWork.ViewModels;
 using WebWork.Infrastructure.Mapping;
+using WebWork.Domain.ViewModels;
+using WebWork.Intefaces.Services;
 
 namespace WebWork.Services.InCookies;
 

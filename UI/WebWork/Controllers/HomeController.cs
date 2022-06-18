@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebWork.Models;
-using WebWork.Services.Interfaces;
-using WebWork.ViewModels;
 using WebWork.Infrastructure.Mapping;
-using WebWork.Domain.Entities;
+using WebWork.Intefaces.Services;
 
 namespace WebWork.Controllers;
 

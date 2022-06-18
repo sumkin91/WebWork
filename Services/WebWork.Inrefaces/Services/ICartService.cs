@@ -1,6 +1,6 @@
-﻿using WebWork.ViewModels;
+﻿using WebWork.Domain.ViewModels;
 
-namespace WebWork.Services.Interfaces;
+namespace WebWork.Intefaces.Services;
 
 public interface ICartService
 {

@@ -1,6 +1,6 @@
 ﻿using WebWork.Domain.Entities;
 
-namespace WebWork.ViewModels;
+namespace WebWork.Domain.ViewModels;
 
 public class CartViewModel
 {

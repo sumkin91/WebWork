@@ -1,7 +1,7 @@
 ﻿using WebWork.Data;
-using WebWork.Services.Interfaces;
 //using WebWork.Models.InMemory;
 using WebWork.Domain.Entities;
+using WebWork.Intefaces.Services;
 
 namespace WebWork.Services.InMemory;
 

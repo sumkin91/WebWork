@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebWork.Services.Interfaces;
 using WebWork.Domain;
-using WebWork.ViewModels;
 //using WebWork.Infrastructure.Mapping; //ручной маппер
 using AutoMapper;
 using WebWork.Infrastructure.Mapping;
+using WebWork.Domain.ViewModels;
+using WebWork.Intefaces.Services;
 
 namespace WebWork.Controllers;
 

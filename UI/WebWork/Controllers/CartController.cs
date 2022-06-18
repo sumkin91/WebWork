@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebWork.Services.Interfaces;
-using WebWork.ViewModels;
+using WebWork.Domain.ViewModels;
+using WebWork.Intefaces.Services;
 
 namespace WebWork.Controllers;
 

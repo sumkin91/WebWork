@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebWork.Domain.Entities.Identity;
-using WebWork.Services.Interfaces;
+using WebWork.Intefaces.Services;
 
 namespace WebWork.Areas.Admin.Controllers;
 

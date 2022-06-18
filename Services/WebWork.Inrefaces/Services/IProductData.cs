@@ -1,6 +1,7 @@
 ﻿using WebWork.Domain.Entities;
 using WebWork.Domain;
-namespace WebWork.Services.Interfaces;
+
+namespace WebWork.Intefaces.Services;
 
 public interface IProductData
 {

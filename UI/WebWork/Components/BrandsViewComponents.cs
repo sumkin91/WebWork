@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebWork.Services.Interfaces;
-using WebWork.ViewModels;
+using WebWork.Domain.ViewModels;
+using WebWork.Intefaces.Services;
 
 namespace WebWork.Components
 {
-     public class BrandsViewComponent : ViewComponent
+    public class BrandsViewComponent : ViewComponent
     {
         private readonly IProductData _ProductData;
 

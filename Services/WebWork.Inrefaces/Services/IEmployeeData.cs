@@ -1,17 +1,17 @@
 ﻿//using WebWork.Models.InMemory;
 using WebWork.Domain.Entities;
 
-namespace WebWork.Services.Interfaces;
+namespace WebWork.Intefaces.Services;
 
 public interface IEmployeeData
 {
     int GetCount();
     IEnumerable<Employee> GetAll();
-    Employee? GetById(int id);   
+    Employee? GetById(int id);
 
     IEnumerable<Employee> Get(int Skip, int Take);
 
-    int Add(Employee employee); 
+    int Add(Employee employee);
 
     bool Edit(Employee employee);
 

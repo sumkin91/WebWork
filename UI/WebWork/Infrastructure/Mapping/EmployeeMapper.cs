@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 //using WebWork.Models.InMemory;
 using WebWork.Domain.Entities;
-using WebWork.ViewModels;
+using WebWork.Domain.ViewModels;
 
 namespace WebWork.Infrastructure.Mapping;
 

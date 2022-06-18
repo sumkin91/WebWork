@@ -1,4 +1,4 @@
-﻿namespace WebWork.ViewModels;
+﻿namespace WebWork.Domain.ViewModels;
 
 public class ProductViewModel
 {
@@ -10,7 +10,7 @@ public class ProductViewModel
 
     public string? ImageUrl { get; set; }
 
-    public string? Brand { get;set; }
+    public string? Brand { get; set; }
 
     public string? Section { get; set; }
 }

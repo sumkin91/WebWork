@@ -1,6 +1,5 @@
 ﻿using WebWork.Infrastructure.Middleware;
 using WebWork.Infrastructure.Convertions;
-using WebWork.Services.Interfaces;
 using WebWork.DAL.Context;
 using Microsoft.EntityFrameworkCore; //for db context
 using Microsoft.AspNetCore.Identity; //for base identity
@@ -9,7 +8,7 @@ using WebWork.Services.InMemory;
 using WebWork.Services.InSQL;
 using WebWork.Services.InCookies;
 using WebWork.Domain.Entities.Identity;
-
+using WebWork.Intefaces.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;

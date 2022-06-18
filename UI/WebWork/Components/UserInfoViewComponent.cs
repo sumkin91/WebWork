@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebWork.Services.Interfaces;
-using WebWork.ViewModels;
 
 namespace WebWork.Components;
 

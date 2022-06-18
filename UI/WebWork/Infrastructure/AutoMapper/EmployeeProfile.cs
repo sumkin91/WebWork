@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using WebWork.ViewModels;
 using WebWork.Domain.Entities;
+using WebWork.Domain.ViewModels;
 
 namespace WebWork.Infrastructure.AutoMapper;
 

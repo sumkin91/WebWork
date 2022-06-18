@@ -1,6 +1,6 @@
 ﻿using WebWork.Domain.Entities;
-using WebWork.ViewModels;
 using System.Diagnostics.CodeAnalysis;
+using WebWork.Domain.ViewModels;
 
 namespace WebWork.Infrastructure.Mapping;
 

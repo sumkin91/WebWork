@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using WebWork.ViewModels.Identity;
 using AutoMapper;
 using WebWork.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Authorization;
+using WebWork.Domain.ViewModels.Identity;
 
 namespace WebWork.Controllers;
 [Authorize]

@@ -1,6 +1,4 @@
-﻿using WebWork.ViewModels;
-
-namespace WebWork.ViewModels;
+﻿namespace WebWork.Domain.ViewModels;
 
 public class BrandViewModel
 {
