@@ -8,6 +8,8 @@ using WebWork.Intefaces.Services;
 using WebWork.Services.Services.InSQL;
 using WebWork.Services.Services.InCookies;
 using WebWork.Services.Data;
+using WebWork.Intefaces.TestApi;
+using WebWork.WebAPI.Clients.Values;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -71,17 +73,20 @@ services.ConfigureApplicationCookie(opt =>
     opt.SlidingExpiration = true;//новый идентификатор сеанса при каждом заходе
 });
 
+
+
 //регистрация сервиса
 //универсальный способ добавления в контейнер сервисов сервисы (как синглтон, но может меняться)
 //services.AddScoped<IEmployeesData, InMemoryEmployeeData>(); // добавление сервиса в виде <интерфейс, реализация> тестовые данные
 
 //services.AddScoped<IProductData, InMemoryProductData>();//тестовые данные
 
+services.AddHttpClient<IValuesService, ValuesClient>(client => client.BaseAddress = new(config["WebApi"]));//добавление сервиса как http клиента
+
 services.AddScoped<IProductData, SqlProductData>();
 services.AddScoped<IEmployeeData, SqlEmployeeData>();
 services.AddScoped<ICartService, InCookiesCartService>();
 services.AddScoped<IOrderService, SqlOrderService>();
-
 
 
 //объект создается единожды (в области будет только данный объект)

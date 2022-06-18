@@ -26,6 +26,7 @@
     <ProjectReference Include="..\..\Data\WebWork.DAL.Sqlite\WebWork.DAL.Sqlite.csproj" />
     <ProjectReference Include="..\..\Data\WebWork.DAL\WebWork.DAL.csproj" />
     <ProjectReference Include="..\..\Services\WebWork.Services\WebWork.Services.csproj" />
+    <ProjectReference Include="..\..\Services\WebWork.WebApi.Clients\WebWork.WebApi.Clients.csproj" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" bundleconfig_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
