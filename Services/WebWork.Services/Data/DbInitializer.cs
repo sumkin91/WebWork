@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore; //для миграции
 using Microsoft.AspNetCore.Identity;
 using WebWork.Domain.Entities.Identity;
+using Microsoft.Extensions.Logging;
 
 namespace WebWork.Data;
 

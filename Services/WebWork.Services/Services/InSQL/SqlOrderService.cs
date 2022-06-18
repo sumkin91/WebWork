@@ -6,6 +6,7 @@ using WebWork.Domain.Entities.Identity;
 using WebWork.Domain.Entities.Orders;
 using WebWork.Domain.ViewModels;
 using WebWork.Intefaces.Services;
+using Microsoft.Extensions.Logging;
 
 namespace WebWork.Services.InSQL;
 

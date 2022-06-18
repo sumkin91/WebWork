@@ -3,6 +3,7 @@ using WebWork.Domain.Entities;
 using WebWork.Infrastructure.Mapping;
 using WebWork.Domain.ViewModels;
 using WebWork.Intefaces.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace WebWork.Services.InCookies;
 
