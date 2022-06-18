@@ -16,11 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebWork.Domain\WebWork.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Migrations\" />
+    <ProjectReference Include="..\..\Common\WebWork.Domain\WebWork.Domain.csproj" />
   </ItemGroup>
 
 </Project>

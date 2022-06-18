@@ -3,15 +3,26 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebWork", "WebWork\WebWork.csproj", "{A53004D5-6779-430E-BCEB-D92412410B62}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{3E817FF0-059C-4C68-88CB-9467E719A0D6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebWork.Domain", "WebWork.Domain\WebWork.Domain.csproj", "{A1620B55-CDEF-43F3-AECD-6842B0D4FA8E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{078C6194-E833-4C2E-ABFA-7169BE84339B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebWork.DAL", "WebWork.DAL\WebWork.DAL.csproj", "{6C703ADD-E4F2-4C0C-B8F3-A6585AA435BA}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{C906BB8C-CEFD-4255-9362-F9A0222405A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebWork.DAL.Sqlite", "WebWork.DAL.Sqlite\WebWork.DAL.Sqlite.csproj", "{2467D3BB-8816-4737-BDAC-188F94F26881}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{FED08152-D0BB-4C5C-A1CF-A10238BB6077}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{856F86C7-666D-457E-8263-A65F383D8677}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Tools", ".Tools", "{996439F3-01EE-4A38-A2DD-4655C2EC278D}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebWork.DAL", "Data\WebWork.DAL\WebWork.DAL.csproj", "{4871487A-CB4D-40FD-8478-D217404E7CD8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebWork.Domain", "Common\WebWork.Domain\WebWork.Domain.csproj", "{B115E8BC-82F1-4A11-BEB0-D6062662EBED}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebWork.DAL.Sqlite", "Data\WebWork.DAL.Sqlite\WebWork.DAL.Sqlite.csproj", "{9487BED9-44DC-4685-AAA0-DFE35EBE2B77}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebWork", "UI\WebWork\WebWork.csproj", "{7B01D8DB-2612-43BC-8C53-F2A4688AE9C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,29 +30,31 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A53004D5-6779-430E-BCEB-D92412410B62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A53004D5-6779-430E-BCEB-D92412410B62}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A53004D5-6779-430E-BCEB-D92412410B62}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A53004D5-6779-430E-BCEB-D92412410B62}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A1620B55-CDEF-43F3-AECD-6842B0D4FA8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A1620B55-CDEF-43F3-AECD-6842B0D4FA8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A1620B55-CDEF-43F3-AECD-6842B0D4FA8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A1620B55-CDEF-43F3-AECD-6842B0D4FA8E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6C703ADD-E4F2-4C0C-B8F3-A6585AA435BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6C703ADD-E4F2-4C0C-B8F3-A6585AA435BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6C703ADD-E4F2-4C0C-B8F3-A6585AA435BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6C703ADD-E4F2-4C0C-B8F3-A6585AA435BA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2467D3BB-8816-4737-BDAC-188F94F26881}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2467D3BB-8816-4737-BDAC-188F94F26881}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2467D3BB-8816-4737-BDAC-188F94F26881}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2467D3BB-8816-4737-BDAC-188F94F26881}.Release|Any CPU.Build.0 = Release|Any CPU
-		{856F86C7-666D-457E-8263-A65F383D8677}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{856F86C7-666D-457E-8263-A65F383D8677}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{856F86C7-666D-457E-8263-A65F383D8677}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{856F86C7-666D-457E-8263-A65F383D8677}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4871487A-CB4D-40FD-8478-D217404E7CD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4871487A-CB4D-40FD-8478-D217404E7CD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4871487A-CB4D-40FD-8478-D217404E7CD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4871487A-CB4D-40FD-8478-D217404E7CD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B115E8BC-82F1-4A11-BEB0-D6062662EBED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B115E8BC-82F1-4A11-BEB0-D6062662EBED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B115E8BC-82F1-4A11-BEB0-D6062662EBED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B115E8BC-82F1-4A11-BEB0-D6062662EBED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9487BED9-44DC-4685-AAA0-DFE35EBE2B77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9487BED9-44DC-4685-AAA0-DFE35EBE2B77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9487BED9-44DC-4685-AAA0-DFE35EBE2B77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9487BED9-44DC-4685-AAA0-DFE35EBE2B77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B01D8DB-2612-43BC-8C53-F2A4688AE9C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B01D8DB-2612-43BC-8C53-F2A4688AE9C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B01D8DB-2612-43BC-8C53-F2A4688AE9C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B01D8DB-2612-43BC-8C53-F2A4688AE9C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4871487A-CB4D-40FD-8478-D217404E7CD8} = {C906BB8C-CEFD-4255-9362-F9A0222405A8}
+		{B115E8BC-82F1-4A11-BEB0-D6062662EBED} = {FED08152-D0BB-4C5C-A1CF-A10238BB6077}
+		{9487BED9-44DC-4685-AAA0-DFE35EBE2B77} = {C906BB8C-CEFD-4255-9362-F9A0222405A8}
+		{7B01D8DB-2612-43BC-8C53-F2A4688AE9C2} = {3E817FF0-059C-4C68-88CB-9467E719A0D6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {63F9BE0F-5EB4-49D0-A929-596355149F8B}
