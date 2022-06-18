@@ -3,7 +3,7 @@
 using WebWork.Domain.Entities;
 using WebWork.Domain.ViewModels;
 
-namespace WebWork.Infrastructure.Mapping;
+namespace WebWork.Services.Mapping;
 
 public static class EmployeeMapper
 {

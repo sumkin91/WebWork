@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
-using WebWork.Data;
 //using WebWork.Models.InMemory;
 using WebWork.Domain.Entities;
 using WebWork.Intefaces.Services;
+using WebWork.Services.Data;
 
-namespace WebWork.Services.InMemory;
+namespace WebWork.Services.Services.InMemory;
 
 public class InMemoryEmployeesData : IEmployeeData
 {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebWork.Infrastructure.Mapping;
 using WebWork.Intefaces.Services;
+using WebWork.Services.Mapping;
 
 namespace WebWork.Controllers;
 

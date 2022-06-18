@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using WebWork.Domain.Entities.Identity;
 using Microsoft.Extensions.Logging;
 
-namespace WebWork.Data;
+namespace WebWork.Services.Data;
 
 public class DbInitializer
 {
@@ -17,7 +17,7 @@ public class DbInitializer
     private readonly UserManager<User> _UserManager;
 
     public DbInitializer(
-        WebWorkDB db, 
+        WebWorkDB db,
         ILogger<DbInitializer> Logger,
         RoleManager<Role> RoleManager,
         UserManager<User> UserManager
@@ -50,7 +50,7 @@ public class DbInitializer
     {
         _Logger.LogInformation("Инициализация БД ...");
 
-        if(RemoveBefore)
+        if (RemoveBefore)
             await RemoveAsync(Cancel).ConfigureAwait(false);
 
         //await _db.Database.EnsureCreatedAsync(Cancel).ConfigureAwait(false);
@@ -112,7 +112,7 @@ public class DbInitializer
         await using var transaction = await _db.Database.BeginTransactionAsync(Cancel);
 
         _Logger.LogInformation("Добавление данных в БД...");
-        
+
         await _db.Products.AddRangeAsync(TestData.Products, Cancel);
 
         await _db.Brands.AddRangeAsync(TestData.Brands, Cancel);
@@ -120,7 +120,7 @@ public class DbInitializer
         await _db.Sections.AddRangeAsync(TestData.Sections, Cancel);
 
         await _db.SaveChangesAsync(Cancel);
-        
+
         _Logger.LogInformation("Добавление данных в БД выполнено успешно");
 
         await transaction.CommitAsync(Cancel);
@@ -168,7 +168,7 @@ public class DbInitializer
         await CheckRoleAsync(Role.Administrators);
         await CheckRoleAsync(Role.Users);
 
-        if(await _UserManager.FindByNameAsync(User.Administrator) is null)
+        if (await _UserManager.FindByNameAsync(User.Administrator) is null)
         {
             _Logger.LogInformation("Пользователь {0} отсутствует в БД. Создание ...", User.Administrator);
 
@@ -179,7 +179,7 @@ public class DbInitializer
 
             var creation_result = await _UserManager.CreateAsync(admin, User.AdminPassword);
 
-            if(creation_result.Succeeded)
+            if (creation_result.Succeeded)
             {
                 _Logger.LogInformation("Пользователь {0} создан. Наделяю ролью администратора", User.Administrator);
 

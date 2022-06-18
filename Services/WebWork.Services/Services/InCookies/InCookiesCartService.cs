@@ -1,11 +1,11 @@
 ﻿using System.Text.Json;
 using WebWork.Domain.Entities;
-using WebWork.Infrastructure.Mapping;
 using WebWork.Domain.ViewModels;
 using WebWork.Intefaces.Services;
 using Microsoft.AspNetCore.Http;
+using WebWork.Services.Mapping;
 
-namespace WebWork.Services.InCookies;
+namespace WebWork.Services.Services.InCookies;
 
 public class InCookiesCartService : ICartService
 {

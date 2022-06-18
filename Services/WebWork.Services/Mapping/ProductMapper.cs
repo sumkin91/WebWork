@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using WebWork.Domain.ViewModels;
 
-namespace WebWork.Infrastructure.Mapping;
+namespace WebWork.Services.Mapping;
 
 public static class ProductMapper
 {

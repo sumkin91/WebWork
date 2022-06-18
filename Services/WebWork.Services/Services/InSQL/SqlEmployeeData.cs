@@ -5,13 +5,13 @@ using System.Linq;
 using WebWork.Intefaces.Services;
 using Microsoft.Extensions.Logging;
 
-namespace WebWork.Services.InSQL;
+namespace WebWork.Services.Services.InSQL;
 
 public class SqlEmployeeData : IEmployeeData
 {
     private readonly WebWorkDB _db;
     private readonly ILogger<SqlEmployeeData> _Logger;
-    
+
     public SqlEmployeeData(WebWorkDB db, ILogger<SqlEmployeeData> Logger)
     {
         _db = db;
@@ -24,7 +24,7 @@ public class SqlEmployeeData : IEmployeeData
 
         //требуется только для хранения данных в памяти, для БД - не требуется
         //if (_db.Employees.Contains(employee)) return employee.Id;
-       
+
         _db.Employees.Add(employee);
 
         _db.SaveChanges();// если работа с БД, то вызвать SAveChange() здесь! БД ничего не узнает и идентификатор не будет получен
@@ -38,7 +38,7 @@ public class SqlEmployeeData : IEmployeeData
     {
         //var employee = GetById(id);
         var employee = _db.Employees
-            .Select(e => new Employee { Id = e.Id}) //только ID достаем
+            .Select(e => new Employee { Id = e.Id }) //только ID достаем
             .FirstOrDefault(e => e.Id == id);
         if (employee is null)
         {
@@ -74,9 +74,9 @@ public class SqlEmployeeData : IEmployeeData
         db_employee.FirstName = employee.FirstName;
         db_employee.Patronymic = employee.Patronymic;
         db_employee.Age = employee.Age;
-       
+
         _db.SaveChanges();// если работа с БД, то вызвать SAveChange() здесь! БД ничего не узнает и идентификатор не будет получен
-        
+
         _Logger.LogInformation("Сотрудник {0} отредактирован", employee);
 
         return true;
@@ -88,11 +88,11 @@ public class SqlEmployeeData : IEmployeeData
         if (Take == 0) return Enumerable.Empty<Employee>();
 
         if (Skip > 0) query = query.Skip(Skip);
-        
-        return query.Take(Take);
-    } 
 
-    public IEnumerable<Employee> GetAll() 
+        return query.Take(Take);
+    }
+
+    public IEnumerable<Employee> GetAll()
     {
         return _db.Employees;
     }

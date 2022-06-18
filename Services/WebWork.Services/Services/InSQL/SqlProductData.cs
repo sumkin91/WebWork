@@ -4,12 +4,12 @@ using WebWork.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using WebWork.Intefaces.Services;
 
-namespace WebWork.Services.InSQL;
+namespace WebWork.Services.Services.InSQL;
 
 public class SqlProductData : IProductData
 {
     private readonly WebWorkDB _db;
-    
+
     public SqlProductData(WebWorkDB db)
     {
         _db = db;
@@ -32,7 +32,7 @@ public class SqlProductData : IProductData
             .Include(s => s.Section)
             .Include(b => b.Brand);
 
-        if(Filter is { Ids: {Length: > 0 } ids }) 
+        if (Filter is { Ids: { Length: > 0 } ids })
         { //запрос по ids
             query = query.Where(p => ids.Contains(p.Id));
         }
@@ -46,7 +46,7 @@ public class SqlProductData : IProductData
         }
 
         return query;
-    } 
+    }
 
 
     public IEnumerable<Section> GetSections() => _db.Sections;

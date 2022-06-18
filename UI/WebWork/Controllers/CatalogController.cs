@@ -2,9 +2,9 @@
 using WebWork.Domain;
 //using WebWork.Infrastructure.Mapping; //ручной маппер
 using AutoMapper;
-using WebWork.Infrastructure.Mapping;
 using WebWork.Domain.ViewModels;
 using WebWork.Intefaces.Services;
+using WebWork.Services.Mapping;
 
 namespace WebWork.Controllers;
 

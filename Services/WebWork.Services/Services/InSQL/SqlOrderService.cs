@@ -8,9 +8,9 @@ using WebWork.Domain.ViewModels;
 using WebWork.Intefaces.Services;
 using Microsoft.Extensions.Logging;
 
-namespace WebWork.Services.InSQL;
+namespace WebWork.Services.Services.InSQL;
 
-public class SqlOrderService: IOrderService
+public class SqlOrderService : IOrderService
 {
     private readonly WebWorkDB _db;
     private readonly UserManager<User> _UserManager;

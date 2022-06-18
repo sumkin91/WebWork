@@ -1,9 +1,9 @@
-﻿using WebWork.Data;
-using WebWork.Domain.Entities;
+﻿using WebWork.Domain.Entities;
 using WebWork.Domain;
 using WebWork.Intefaces.Services;
+using WebWork.Services.Data;
 
-namespace WebWork.Services.InMemory
+namespace WebWork.Services.Services.InMemory
 {
     [Obsolete("Используйте SqlProductData")]
     public class InMemoryProductData : IProductData
