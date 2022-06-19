@@ -10,6 +10,7 @@ using WebWork.Services.Services.InCookies;
 using WebWork.Services.Data;
 using WebWork.Intefaces.TestApi;
 using WebWork.WebAPI.Clients.Values;
+using WebWork.WebApi.Clients.Employees;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -82,9 +83,12 @@ services.ConfigureApplicationCookie(opt =>
 //services.AddScoped<IProductData, InMemoryProductData>();//тестовые данные
 
 services.AddHttpClient<IValuesService, ValuesClient>(client => client.BaseAddress = new(config["WebApi"]));//добавление сервиса как http клиента
+services.AddHttpClient<IEmployeeData, EmployeesClient>(client => client.BaseAddress = new(config["WebApi"]));
+
 
 services.AddScoped<IProductData, SqlProductData>();
-services.AddScoped<IEmployeeData, SqlEmployeeData>();
+//services.AddScoped<IEmployeeData, SqlEmployeeData>();
+
 services.AddScoped<ICartService, InCookiesCartService>();
 services.AddScoped<IOrderService, SqlOrderService>();
 
