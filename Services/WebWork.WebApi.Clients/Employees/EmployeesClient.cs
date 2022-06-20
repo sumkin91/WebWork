@@ -7,8 +7,8 @@ namespace WebWork.WebApi.Clients.Employees;
 
 public class EmployeesClient : BaseClient, IEmployeeData
 {
-    public EmployeesClient(HttpClient Client/*, string Address*/) 
-        : base(Client, "api/employees")//адрес контроллера в конструкторе надо удалить аргумент
+    public EmployeesClient(HttpClient Client) 
+        : base(Client, "api/employees")//адрес контроллера в конструкторе надо удалить (аргумент)
     {
 
     }

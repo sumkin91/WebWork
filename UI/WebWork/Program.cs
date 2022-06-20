@@ -11,6 +11,7 @@ using WebWork.Services.Data;
 using WebWork.Intefaces.TestApi;
 using WebWork.WebAPI.Clients.Values;
 using WebWork.WebApi.Clients.Employees;
+using WebWork.WebApi.Clients;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -84,9 +85,10 @@ services.ConfigureApplicationCookie(opt =>
 
 services.AddHttpClient<IValuesService, ValuesClient>(client => client.BaseAddress = new(config["WebApi"]));//добавление сервиса как http клиента
 services.AddHttpClient<IEmployeeData, EmployeesClient>(client => client.BaseAddress = new(config["WebApi"]));
+services.AddHttpClient<IProductData, ProductsClient>(client => client.BaseAddress = new(config["WebApi"]));
 
 
-services.AddScoped<IProductData, SqlProductData>();
+//services.AddScoped<IProductData, SqlProductData>();
 //services.AddScoped<IEmployeeData, SqlEmployeeData>();
 
 services.AddScoped<ICartService, InCookiesCartService>();
