@@ -45,7 +45,7 @@ public class EmployeesApiController : ControllerBase
         var result = _EmployeeData.Get(Skip, Take);
         return Ok(result);
     }
-    [HttpPost("{Id:int}")]
+    [HttpGet("{Id:int}")]
     public IActionResult GetById(int Id)
     {
         var result = _EmployeeData.GetById(Id);
