@@ -5,11 +5,11 @@ using WebWork.Domain.Entities;
 using WebWork.Intefaces.Services;
 using WebWork.WebApi.Clients.Base;
 
-namespace WebWork.WebApi.Clients;
+namespace WebWork.WebApi.Clients.Products;
 
-public class ProductsClient: BaseClient, IProductData
+public class ProductsClient : BaseClient, IProductData
 {
-    public ProductsClient(HttpClient Client): base(Client, "api/products"){ }
+    public ProductsClient(HttpClient Client) : base(Client, "api/products") { }
 
     public Brand? GetBrandById(int Id)
     {
@@ -33,7 +33,7 @@ public class ProductsClient: BaseClient, IProductData
     {
         var response = Post(Address, Filter ?? new());
 
-        if(response.StatusCode == System.Net.HttpStatusCode.NoContent)
+        if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
             return Enumerable.Empty<Product>();
 
         var result = response
