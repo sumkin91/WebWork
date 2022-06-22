@@ -52,6 +52,6 @@ public class ValuesClient : BaseClient, IValuesService
             return false;
 
         response.EnsureSuccessStatusCode();
-        throw new InvalidOperationException();
+        return true;
     }
 }
