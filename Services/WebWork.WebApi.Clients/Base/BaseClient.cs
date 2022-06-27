@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 
 namespace WebWork.WebApi.Clients.Base;
 
-public abstract class BaseClient
+public abstract class BaseClient: IDisposable
 {
     protected HttpClient Http { get; }
     protected string Address { get; }
@@ -55,11 +55,11 @@ public abstract class BaseClient
         return response.EnsureSuccessStatusCode();
     }
 
-    protected HttpResponseMessage Put<T>(string url, T value) => PostAsync(url, value).Result;
+    protected HttpResponseMessage Put<T>(string url, T value) => PutAsync(url, value).Result;
 
     protected async Task<HttpResponseMessage> PutAsync<T>(string url, T value, CancellationToken Cancel = default)
     {
-        var response = await Http.PostAsJsonAsync(url, value, Cancel).ConfigureAwait(false);
+        var response = await Http.PutAsJsonAsync(url, value, Cancel).ConfigureAwait(false);
         return response.EnsureSuccessStatusCode();
     }
 
@@ -69,5 +69,30 @@ public abstract class BaseClient
     {
         var response = await Http.DeleteAsync(url, Cancel).ConfigureAwait(false);
         return response;
+    }
+
+    //~BaseClient() => Dispose(false);
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);// в случае наличия финализатора (~BaseClient() { ... }) - удалить данный объект из очереди на финализацию если был вызван данный метод
+    }
+
+    private bool _Dispose;
+
+    protected virtual void Dispose(bool Disposing)
+    {
+        if (_Dispose) return;
+        _Dispose = true;
+        if (Disposing)
+        {
+            //здесь должны очистить все управляемые ресурсы
+            //Http.Dispose(); // получаемый параметр, чистить нельзя (не мы создали)
+
+        }
+
+        //здесь надо освободить неуправляемые ресурсы
+
     }
 }

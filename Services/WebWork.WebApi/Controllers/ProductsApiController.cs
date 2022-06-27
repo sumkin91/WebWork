@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebWork.Domain;
 using WebWork.Domain.DTO;
+using WebWork.Intefaces;
 using WebWork.Intefaces.Services;
 
 namespace WebWork.WebApi.Controllers;
 
 [ApiController]
-[Route("api/products")]
+//[Route("api/products")]
+[Route(WebApiAddresses.V1.Products)]
 public class ProductsApiController: ControllerBase
 {
     private readonly IProductData _ProductData;

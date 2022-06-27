@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebWork.Intefaces.Services;
 using WebWork.Domain.Entities;
+using WebWork.Intefaces;
 
 namespace WebWork.WebApi.Controllers;
 
 [ApiController]
-[Route("api/employees")]
+//[Route("api/employees")]
+[Route(WebApiAddresses.V1.Employees)]
 public class EmployeesApiController : ControllerBase
 {
     private readonly IEmployeeData _EmployeeData;

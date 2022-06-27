@@ -13,45 +13,49 @@ using WebWork.WebAPI.Clients.Values;
 using WebWork.WebApi.Clients.Employees;
 using WebWork.WebApi.Clients.Orders;
 using WebWork.WebApi.Clients.Products;
+using static WebWork.WebApi.Clients.Identity.UsersClients;
+using static WebWork.WebApi.Clients.Identity.RolesClients;
+using WebWork.Intefaces.Services.Identity;
+using Polly;
+using Polly.Extensions.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 var services = builder.Services;
-//config.GetSection("DB")["Type"];
-var db_type = config["DB:Type"];
-var db_connection_string = config.GetConnectionString(db_type);
 
-switch (db_type)
-{
-    case "DockerDB"://как SqlServer
-    case "SqlServer":
-        services.AddDbContext<WebWorkDB>(opt => opt.UseSqlServer(db_connection_string));
-        break;
-    case "Sqlite":
-        services.AddDbContext<WebWorkDB>(opt => opt.UseSqlite(db_connection_string, o => o.MigrationsAssembly("WebWork.DAL.Sqlite")));
-        break;
-}
-//это уже не надо!
-//services.AddDbContext<WebWorkDB>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));//добавление контекста БД, указывается строка подключения в аргументе (см. appsettings.json)
-services.AddScoped<DbInitializer>();//инициализатор БД
-
-//добавление Identity в сервисы и конфигурирование
-//services.AddIdentity<IdentityUser, IdentityRole>();//если не расширять возможности базовых классов
-services.AddIdentity<User, Role>(/*opt => { opt...}*/)
-    .AddEntityFrameworkStores<WebWorkDB>() //указание в каком контекте БД хранить
+services.AddIdentity<User, Role>()
     .AddDefaultTokenProviders();//генерация токена после сброма пароля
 
+
+services.AddHttpClient("WebWorkApiIdentity", 
+    client => client.BaseAddress = new(config["WebApi"]))
+    .AddTypedClient<IUsersClient, UsersClient>()
+    .AddTypedClient<IUserStore<User>, UsersClient>()
+    .AddTypedClient<IUserRoleStore<User>, UsersClient>()
+    .AddTypedClient<IUserRoleStore<User>, UsersClient>()
+    .AddTypedClient<IUserPasswordStore<User>, UsersClient>()
+    .AddTypedClient<IUserEmailStore<User>, UsersClient>()
+    .AddTypedClient<IUserPhoneNumberStore<User>, UsersClient>()
+    .AddTypedClient<IUserTwoFactorStore<User>, UsersClient>()
+    .AddTypedClient<IUserClaimStore<User>, UsersClient>()
+    .AddTypedClient<IUserLoginStore<User>, UsersClient>()
+    .AddTypedClient<IRolesClient, RolesClient>()
+    .AddTypedClient<IRoleStore<Role>, RolesClient>()
+    .AddPolicyHandler(GetRetryPolicy())
+    .AddPolicyHandler(GetCircuitBreakerPolicy())
+    ;
+;
 //конфигурирование системы индентификации
 services.Configure<IdentityOptions>(opt =>
 {
-
+#if DEBUG
     opt.Password.RequireDigit = false;
     opt.Password.RequireLowercase = false;
     opt.Password.RequireUppercase = false;
     opt.Password.RequireNonAlphanumeric = false;
     opt.Password.RequiredLength = 3;
     opt.Password.RequiredUniqueChars = 3;
-
+#endif
     opt.User.RequireUniqueEmail = false;
     opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ1234567890";
     //настройки блокировки
@@ -78,38 +82,33 @@ services.ConfigureApplicationCookie(opt =>
 
 
 
-//регистрация сервиса
-//универсальный способ добавления в контейнер сервисов сервисы (как синглтон, но может меняться)
-//services.AddScoped<IEmployeesData, InMemoryEmployeeData>(); // добавление сервиса в виде <интерфейс, реализация> тестовые данные
-
-//services.AddScoped<IProductData, InMemoryProductData>();//тестовые данные
-
 services.AddHttpClient("WebWorkApi", client => client.BaseAddress = new(config["WebApi"]))
     .AddTypedClient<IValuesService, ValuesClient>()
     .AddTypedClient<IEmployeeData, EmployeesClient>()
     .AddTypedClient<IProductData, ProductsClient>()
-    .AddTypedClient<IOrderService, OrdersClient>();
+    .AddTypedClient<IOrderService, OrdersClient>()
+    .AddPolicyHandler(GetRetryPolicy())
+    .AddPolicyHandler(GetCircuitBreakerPolicy())
+    ;
 
-/*
-services.AddHttpClient<IValuesService, ValuesClient>(client => client.BaseAddress = new(config["WebApi"]));//добавление сервиса как http клиента
-services.AddHttpClient<IEmployeeData, EmployeesClient>(client => client.BaseAddress = new(config["WebApi"]));
-services.AddHttpClient<IProductData, ProductsClient>(client => client.BaseAddress = new(config["WebApi"]));
-services.AddHttpClient<IOrderService, OrdersClient>(client => client.BaseAddress = new(config["WebApi"]));
-*/
+//политика повторных запросов
+static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(int MaxRetryCount = 5, int MaxJitterTime = 1000)
+{
+    var jitter = new Random();
+    return HttpPolicyExtensions
+       .HandleTransientHttpError()
+       .WaitAndRetryAsync(MaxRetryCount, RetryAttempt =>
+            TimeSpan.FromSeconds(Math.Pow(2, RetryAttempt)) +
+            TimeSpan.FromMilliseconds(jitter.Next(0, MaxJitterTime)));
+}
 
-//services.AddScoped<IProductData, SqlProductData>();
-//services.AddScoped<IEmployeeData, SqlEmployeeData>();
+//политика разрушения цепочек (при замыкании)
+static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy() =>
+    HttpPolicyExtensions
+       .HandleTransientHttpError()
+       .CircuitBreakerAsync(handledEventsAllowedBeforeBreaking: 5, TimeSpan.FromSeconds(30));
 
 services.AddScoped<ICartService, InCookiesCartService>();
-//services.AddScoped<IOrderService, SqlOrderService>();
-
-
-//объект создается единожды (в области будет только данный объект)
-//builder.Services.AddSingleton<IEmployeesData, InMemoryEmployeesData>();
-//объект сервиса создается заново
-//builder.Services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
-
-
 
 services.AddControllersWithViews(opt => //настройка сервисов путем добавления контроллеров и представлений 
 {
@@ -121,14 +120,6 @@ services.AddControllersWithViews(opt => //настройка сервисов п
 services.AddAutoMapper(typeof(Program));//добавление автомаппера
 
 var app = builder.Build();
-
-using (var scope = app.Services.CreateScope())//после построения инициализация БД
-{
-    var db_init = scope.ServiceProvider.GetService<DbInitializer>();
-    await db_init.InitializeAsync(
-        RemoveBefore: app.Configuration.GetValue("DB:DbRecreated", false),
-        AddTestData: app.Configuration.GetValue("DB:DbRecreated", false));
-}
 
 //подключим страничку отладчика в режиме разработчика, на хостинге работать не будет
 //см. поле "ASPNETCORE_ENVIRONMENT" в Properties/launchSettings.json раздела profiles
@@ -150,8 +141,6 @@ app.UseMiddleware<TestMiddleware>();//добавление промежуточ�
 app.MapGet("/greatings", () => app.Configuration["ServerGreatings"]);
 
 app.UseWelcomePage("/welcome");
-
-//app.MapDefaultControllerRoute();//настройка маршрутизации
 
 //конфигурация машрутизации, на основе tag-helperы строят адреса на страничках
 

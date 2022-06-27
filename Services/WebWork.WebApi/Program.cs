@@ -60,6 +60,14 @@ services.AddSwaggerGen();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())//после построения инициализация БД
+{
+    var db_init = scope.ServiceProvider.GetService<DbInitializer>();
+    await db_init.InitializeAsync(
+        RemoveBefore: app.Configuration.GetValue("DB:DbRecreated", false),
+        AddTestData: app.Configuration.GetValue("DB:DbRecreated", false));
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
