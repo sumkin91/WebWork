@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Json;
 using WebWork.Domain.Entities;
+using WebWork.Intefaces;
 using WebWork.Intefaces.Services;
 using WebWork.WebApi.Clients.Base;
 
@@ -8,7 +9,7 @@ namespace WebWork.WebApi.Clients.Employees;
 public class EmployeesClient : BaseClient, IEmployeeData
 {
     public EmployeesClient(HttpClient Client) 
-        : base(Client, "api/employees")//адрес контроллера в конструкторе надо удалить (аргумент)
+        : base(Client, WebApiAddresses.V1.Employees)//адрес контроллера в конструкторе надо удалить (аргумент)
     {
 
     }

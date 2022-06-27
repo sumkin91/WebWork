@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
+using WebWork.Intefaces;
 using WebWork.Intefaces.TestApi;
 using WebWork.WebApi.Clients.Base;
 
@@ -7,7 +8,7 @@ namespace WebWork.WebAPI.Clients.Values;
 
 public class ValuesClient : BaseClient, IValuesService
 {
-    public ValuesClient(HttpClient Client) : base(Client, "api/values") { }
+    public ValuesClient(HttpClient Client) : base(Client, WebApiAddresses.V1.Values) { }
 
     public IEnumerable<string> GetValues()
     {

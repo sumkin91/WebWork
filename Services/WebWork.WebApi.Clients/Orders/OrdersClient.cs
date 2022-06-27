@@ -2,6 +2,7 @@
 using WebWork.Domain.DTO;
 using WebWork.Domain.Entities.Orders;
 using WebWork.Domain.ViewModels;
+using WebWork.Intefaces;
 using WebWork.Intefaces.Services;
 using WebWork.WebApi.Clients.Base;
 
@@ -9,7 +10,7 @@ namespace WebWork.WebApi.Clients.Orders;
 
 public class OrdersClient : BaseClient, IOrderService
 {
-    public OrdersClient(HttpClient Client) : base(Client, "api/orders") { }
+    public OrdersClient(HttpClient Client) : base(Client, WebApiAddresses.V1.Orders) { }
 
     public async Task<Order> CreateOrderAsync(string UserName, CartViewModel Cart, OrderViewModel OrderModel, CancellationToken Cancel = default)
     {

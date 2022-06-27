@@ -365,3 +365,5 @@ FodyWeavers.xsd
 **/wwwroot/js/site.*
 **/wwwroot/css/site.*
 **/WebWork.db*
+**/WebWork.WebApi/WebWork.WebApi.xml
+**/WebWork.Domain/WebWork.Domain.xml

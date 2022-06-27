@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebWork.Intefaces;
 
 namespace WebWork.WebApi.Controllers;
 
 [ApiController]
 //[Route("api/[controller]")]
-[Route("api/values")]
+//[Route("api/values")]
+[Route(WebApiAddresses.V1.Values)]
 public class ValuesController : ControllerBase
 {
     private const int __ValueCount = 10;

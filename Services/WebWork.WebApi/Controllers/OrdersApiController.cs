@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebWork.Domain.DTO;
+using WebWork.Intefaces;
 using WebWork.Intefaces.Services;
 
 namespace WebWork.WebApi.Controllers;
 
 [ApiController]
-[Route("api/orders")]
+//[Route("api/orders")]
+[Route(WebApiAddresses.V1.Orders)]
 public class OrdersApiController : ControllerBase
 {
     private readonly IOrderService _OrderService;
