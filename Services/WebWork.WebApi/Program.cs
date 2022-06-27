@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using WebWork.DAL.Context;
+using WebWork.Domain.Entities;
 using WebWork.Domain.Entities.Identity;
 using WebWork.Intefaces.Services;
 using WebWork.Services.Data;
@@ -54,9 +56,35 @@ services.AddScoped<IEmployeeData, SqlEmployeeData>();
 services.AddScoped<IOrderService, SqlOrderService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-services.AddControllers();
+services.AddControllers(opt =>
+{
+    opt.InputFormatters.Add(new XmlSerializerInputFormatter(opt));
+    opt.OutputFormatters.Add(new XmlSerializerOutputFormatter());
+});
 services.AddEndpointsApiExplorer();
-services.AddSwaggerGen();
+services.AddSwaggerGen(opt =>
+{
+    //const string webwork_webapi_xml = "WebWork.WebAPI.xml";
+    //const string webwork_domain_xml = "WebWork.Domain.xml";
+
+    //var webwork_webapi_xml = $"{typeof(Program).Assembly.GetName().Name}.xml";
+    //var webwork_domain_xml = $"{typeof(Product).Assembly.GetName().Name}.xml";
+
+    var webwork_webapi_xml = Path.ChangeExtension(Path.GetFileName(typeof(Program).Assembly.Location), ".xml");
+    var webwork_domain_xml = Path.ChangeExtension(Path.GetFileName(typeof(Product).Assembly.Location), ".xml");
+
+    const string debug_path = "bin/Debug/net6.0";
+
+    if (File.Exists(webwork_webapi_xml))
+        opt.IncludeXmlComments(webwork_webapi_xml);
+    else if (File.Exists(Path.Combine(debug_path, webwork_webapi_xml)))
+        opt.IncludeXmlComments(Path.Combine(debug_path, webwork_webapi_xml));
+
+    if (File.Exists(webwork_domain_xml))
+        opt.IncludeXmlComments(webwork_domain_xml);
+    else if (File.Exists(Path.Combine(debug_path, webwork_domain_xml)))
+        opt.IncludeXmlComments(Path.Combine(debug_path, webwork_domain_xml));
+});
 
 var app = builder.Build();
 

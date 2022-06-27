@@ -27,8 +27,11 @@ services.AddIdentity<User, Role>()
     .AddDefaultTokenProviders();//генерация токена после сброма пароля
 
 
-services.AddHttpClient("WebWorkApiIdentity", 
-    client => client.BaseAddress = new(config["WebApi"]))
+services.AddHttpClient("WebWorkApiIdentity",
+    client => {
+        //client.DefaultRequestHeaders.Add("accept", "application/json");
+        client.BaseAddress = new(config["WebApi"]);
+    })
     .AddTypedClient<IUsersClient, UsersClient>()
     .AddTypedClient<IUserStore<User>, UsersClient>()
     .AddTypedClient<IUserRoleStore<User>, UsersClient>()

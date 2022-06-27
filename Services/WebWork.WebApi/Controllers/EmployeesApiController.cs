@@ -5,9 +5,12 @@ using WebWork.Intefaces;
 
 namespace WebWork.WebApi.Controllers;
 
+/// <summary>Управление сотрудниками</summary>
 [ApiController]
 //[Route("api/employees")]
 [Route(WebApiAddresses.V1.Employees)]
+//[Produces("application/json")]//тип контента
+//[Produces("application/xml")]
 public class EmployeesApiController : ControllerBase
 {
     private readonly IEmployeeData _EmployeeData;
@@ -19,6 +22,8 @@ public class EmployeesApiController : ControllerBase
         _Logger = Logger;
     }
 
+    /// <summary>Количество сотрудников</summary>
+    /// <returns></returns>
     [HttpGet("count")] //GET -> api/employees/count
     public IActionResult GetCount()
     {
@@ -26,6 +31,7 @@ public class EmployeesApiController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>Полный список сотрудников</summary>
     [HttpGet]//GET -> api/employees
     public IActionResult GetAll()
     {
@@ -36,6 +42,9 @@ public class EmployeesApiController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>Фрагмент списка сотрудников</summary>
+    /// <param name="Skip">Пропускаемое количество элементов в начале списка</param>
+    /// <param name="Take">Количество элементов в выборке</param>
     [HttpGet("[[{Skip:int}/{Take:int}]]")]//GET -> api/employees[2:4]    [HttpGet("{Skip:int}/{Take:int}")]//GET -> api/employees/2/4)
     public IActionResult Get(int Skip, int Take)
     {
@@ -47,6 +56,9 @@ public class EmployeesApiController : ControllerBase
         var result = _EmployeeData.Get(Skip, Take);
         return Ok(result);
     }
+
+    /// <summary>Сотрудник с заданным идентификатором</summary>
+    /// <param name="Id">Идентификатор сотрудника</param>
     [HttpGet("{Id:int}")]
     public IActionResult GetById(int Id)
     {
@@ -54,6 +66,8 @@ public class EmployeesApiController : ControllerBase
         return result is null ? NotFound() : Ok(result);
     }
 
+    /// <summary>Добавление нового сотрудника</summary>
+    /// <param name="employees">Добавляемый сотрудник</param>
     [HttpPost]
     public IActionResult Add([FromBody]Employee employees)
     {
@@ -61,6 +75,8 @@ public class EmployeesApiController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { Id= id }, employees);
     }
 
+    /// <summary>Внесение изменений в информацию о сотруднике</summary>
+    /// <param name="employees">Структура с новой информацией о сотруднике</param>
     [HttpPut]
     public IActionResult Edit([FromBody] Employee employees)
     {
@@ -70,6 +86,8 @@ public class EmployeesApiController : ControllerBase
         return NotFound(false);        
     }
 
+    /// <summary>Удаление сотрудника</summary>
+    /// <param name="Id">Идентификатор сотрудника</param>
     [HttpDelete("{Id:int}")]
     public IActionResult Delete(int Id)
     {
